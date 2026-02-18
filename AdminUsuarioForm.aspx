@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="AdminUsuarioForm.aspx.cs" Inherits="GestionDocumentos.AdminUsuarioEdit" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MenuPrincipal.master" AutoEventWireup="true" CodeBehind="AdminUsuarioForm.aspx.cs" Inherits="GestionDocumentos.AdminUsuarioEdit" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
 
@@ -6,35 +6,35 @@
         <div class="row justify-content-center">
             <div class="col-md-8 col-lg-6">
 
-                <!-- Título dinámico (se setea por JS) -->
+
                 <h2 id="tituloForm" class="text-center mb-3">Formulario de Usuario</h2>
 
-                <!-- Franja visible solo en modo editar -->
+
                 <div id="alertaEdicion" class="alert alert-info d-none">
                     Editando usuario con ID: <strong id="textoId"></strong>
                 </div>
 
-                <form>
-                    <div class="mb-3">
-                        <label class="form-label">NOMBRES</label>
-                        <input id="txtNombres" type="text" class="form-control" placeholder="Ingrese nombres" />
-                    </div>
 
-                    <div class="mb-3">
-                        <label class="form-label">APELLIDOS</label>
-                        <input id="txtApellidos" type="text" class="form-control" placeholder="Ingrese apellidos" />
-                    </div>
+                <div class="mb-3">
+                    <label class="form-label">NOMBRES</label>
+                    <input id="txtNombres" type="text" class="form-control" placeholder="Ingrese nombres" />
+                </div>
 
-                    <div class="mb-3">
-                        <label class="form-label">NOMBRE DE USUARIO</label>
-                        <input id="txtUsuario" type="text" class="form-control" placeholder="Ingrese usuario" />
-                    </div>
+                <div class="mb-3">
+                    <label class="form-label">APELLIDOS</label>
+                    <input id="txtApellidos" type="text" class="form-control" placeholder="Ingrese apellidos" />
+                </div>
 
-                    <div class="d-flex gap-2">
-                        <a href="AdminUsuarios.aspx" class="btn btn-secondary">Cancelar</a>
-                        <button type="button" id="btnGuardar" class="btn btn-primary">Guardar</button>
-                    </div>
-                </form>
+                <div class="mb-3">
+                    <label class="form-label">NOMBRE DE USUARIO</label>
+                    <input id="txtUsuario" type="text" class="form-control" placeholder="Ingrese usuario" />
+                </div>
+
+                <div class="d-flex gap-2">
+                    <a href="AdminUsuarios.aspx" class="btn btn-secondary">Cancelar</a>
+                    <button type="button" id="btnGuardar" class="btn btn-primary">Guardar</button>
+                </div>
+
 
                 <!-- Mensaje "simulado" (solo frontend) -->
                 <div id="msg" class="alert alert-success mt-3 d-none"></div>
