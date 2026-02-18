@@ -60,8 +60,11 @@
                 </asp:DropDownList>
                 
                 <div>
-                    <label for="SearchFile">Buscar archivo:</label>
-                    <input id="SearchFile" type="text" />
+                    <asp:Label ID="LblSearchFile"
+                               Text="Buscar archivo"
+                               AssociatedControlID="TxtSearchFile"
+                               runat="server"> </asp:Label>
+                    <asp:TextBox ID="TxtSearchFile" runat="server"></asp:TextBox>
                 </div>
             </div>
             
