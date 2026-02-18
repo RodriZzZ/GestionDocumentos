@@ -17,7 +17,10 @@ namespace GestionDocumentos
         { 
             if (Page.IsValid)
             {
-                if (txtUsuario.Text == "admin" && txtPassword.Text == "12345")
+                string correoCorrecto = "example@gmail.com";
+                string claveCorrecta = "utec123";
+
+                if (txtUsuario.Text == correoCorrecto && txtPassword.Text == claveCorrecta)
                 {
                     Session["Usuario"] = txtUsuario.Text;
 
@@ -25,7 +28,8 @@ namespace GestionDocumentos
                 }
                 else
                 {
-                    // Label de error
+                    lblMensajeError.Text = "Correo o contraseña incorrectos.";
+                    lblMensajeError.Visible = true;
                 }
             }
         }

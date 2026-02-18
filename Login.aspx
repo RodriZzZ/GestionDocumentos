@@ -65,6 +65,10 @@
                         ErrorMessage="La contraseña es obligatoria." ForeColor="Red" Display="Dynamic" CssClass="small ms-3" />
                 </div>
 
+                <div class="mb-3 text-center">
+                    <asp:Label ID="lblMensajeError" runat="server" ForeColor="Red" Visible="false" CssClass="small fw-bold"></asp:Label>
+                </div>
+
                 <div class="d-grid gap-2 mb-4">
                     <asp:Button ID="btnLogin" runat="server" Text="Iniciar Sesión" CssClass="btn btn-primary btn-login" OnClick="btnLogin_Click" />
                 </div>
