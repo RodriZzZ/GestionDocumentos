@@ -30,6 +30,9 @@ namespace GestionDocumentos
                 {
                     lblMensajeError.Text = "Correo o contraseña incorrectos.";
                     lblMensajeError.Visible = true;
+
+                    txtUsuario.Text = "";
+                    txtPassword.Focus();
                 }
             }
         }
