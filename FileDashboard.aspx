@@ -1,4 +1,4 @@
-﻿<%@ Page Title="Title" Language="C#" MasterPageFile="~/Site.Master" CodeBehind="FileDashboard.aspx.cs" Inherits="GestionDocumentos.FileDashboard" %>
+﻿<%@ Page Title="Title" Language="C#" MasterPageFile="~/MenuPrincipal.Master" CodeBehind="FileDashboard.aspx.cs" Inherits="GestionDocumentos.FileDashboard" %>
 
 <asp:Content ID="FileDashboardContent" ContentPlaceHolderID="MainContent" runat="server">
     <style>
@@ -29,7 +29,7 @@
         }
     </style>
 
-    <asp:LoginName ID="LblLoggedUserWelcome" runat="server" Text="Bienvenid@ usuario"></asp:LoginName>
+    <asp:Label ID="LblLoggedUserWelcome" runat="server" Text="Bienvenid@ usuario"></asp:Label>
     <main class="flex flex-row">
         <aside class="mr-8">
             <asp:Button ID="BtnUpdateFile" Text="Subir archivo" runat="server"></asp:Button>
