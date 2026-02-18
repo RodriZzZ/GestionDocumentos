@@ -24,7 +24,7 @@ namespace GestionDocumentos
                 {
                     Session["Usuario"] = txtUsuario.Text;
 
-                    Response.Redirect("Dashboard.aspx");
+                    Response.Redirect("FileDashboard.aspx");
                 }
                 else
                 {
