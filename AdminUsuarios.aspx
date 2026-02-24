@@ -2,7 +2,7 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
     <div class="container">
-        <h1 class="text-center">ADMINISTRADOR DE USUARIO</h1>
+        <h1 class="text-center">Administrador de Usuario</h1>
         <div class="row">
             <div class="w-100 d-flex justify-content-start">
                 <a class="btn btn-primary mb-3" href="AdminUsuarioForm.aspx">Crear usuario</a>
@@ -11,10 +11,10 @@
                 <table class="table table-striped table-bordered">
                     <thead>
                         <tr>
-                            <th>ID</th>
-                            <th>NOMBRE</th>
-                            <th>USUARIO</th>
-                            <th>ACCIONES</th>
+                            <th>Id</th>
+                            <th>Nombre</th>
+                            <th>Usuario</th>
+                            <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -22,8 +22,8 @@
                             { %>
                         <tr id="<%: i+1 %>">
                             <td><%: i+1 %></td>
-                            <td>NOMBRE APELLIDO <%: i+1 %></td>
-                            <td>USUARIO  <%: i+1 %></td>
+                            <td>Nombre Apelllido <%: i+1 %></td>
+                            <td>Usuario  <%: i+1 %></td>
                             <td>
                                 <a class="btn btn-sm btn-light" data-bs-toggle="tooltip" data-bs-placemente="top" data-bs-title="editar" title="editar" href="AdminUsuarioForm.aspx?id=<%: i+1 %>">✏️</a>
                                 <a class="btn btn-sm btn-light" data-bs-toggle="tooltip" data-bs-placemente="top" data-bs-title="eliminar" title="eliminar" href="javascript:void(0)">🗑️</a>

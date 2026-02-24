@@ -11,22 +11,22 @@
 
 
                 <div id="alertaEdicion" class="alert alert-info d-none">
-                    Editando usuario con ID: <strong id="textoId"></strong>
+                    Editando usuario con Id: <strong id="textoId"></strong>
                 </div>
 
 
                 <div class="mb-3">
-                    <label class="form-label">NOMBRES</label>
+                    <label class="form-label">Nombres</label>
                     <input id="txtNombres" type="text" class="form-control" placeholder="Ingrese nombres" />
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label">APELLIDOS</label>
+                    <label class="form-label">Apellidos</label>
                     <input id="txtApellidos" type="text" class="form-control" placeholder="Ingrese apellidos" />
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label">NOMBRE DE USUARIO</label>
+                    <label class="form-label">Nombre de Usuario</label>
                     <input id="txtUsuario" type="text" class="form-control" placeholder="Ingrese usuario" />
                 </div>
 
