@@ -7,11 +7,11 @@
             <div class="col-md-4 mb-4">
                 <div class="card shadow-sm border-0 rounded-3">
                     <div class="card-body p-4">
-                        <h4 class="fw-bold mb-3 text-primary">Nuevo Tipo</h4>
-                        <div class="mb-3">
-                            <label class="form-label small fw-bold">Nombre del Tipo</label>
-                            <asp:TextBox ID="txtNombreTipo" runat="server" CssClass="form-control rounded-pill" placeholder="Ej: Factura, PDF..."></asp:TextBox>
-                        </div>
+                        <h4 class="fw-bold mb-3 text-primary">Clasificación de Documento</h4>
+
+                        <label class="form-label small fw-bold">Nombre de la Categoría</label>
+                        <asp:TextBox ID="txtNombreTipo" runat="server" CssClass="form-control rounded-pill"
+                            placeholder="Ej: Legal, Tesis, Fiscal..."></asp:TextBox>
                         <div class="mb-3">
                             <label class="form-label small fw-bold">Descripción</label>
                             <asp:TextBox ID="txtDescripcionTipo" runat="server" TextMode="MultiLine" Rows="3" CssClass="form-control rounded-3" placeholder="Breve descripción..."></asp:TextBox>
@@ -41,7 +41,7 @@
                                 <tbody>
                                     <tr>
                                         <td>1</td>
-                                        <td><span class="badge bg-info text-dark">PDF</span></td>
+                                        <td><span class="badge bg-info text-dark">Tesis</span></td>
                                         <td class="small text-muted">Documentos de solo lectura</td>
                                         <td class="text-center">
                                             <button class="btn btn-sm btn-light border">✏️</button>
@@ -50,7 +50,7 @@
                                     </tr>
                                     <tr>
                                         <td>2</td>
-                                        <td><span class="badge bg-success">Excel</span></td>
+                                        <td><span class="badge bg-success">Documento legal</span></td>
                                         <td class="small text-muted">Hojas de cálculo e informes</td>
                                         <td class="text-center">
                                             <button class="btn btn-sm btn-light border">✏️</button>
