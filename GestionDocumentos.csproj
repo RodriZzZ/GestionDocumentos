@@ -203,10 +203,12 @@
     </Compile>
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
-    <Compile Include="Datos\Conexion.cs" />
     <Compile Include="FileDashboard.aspx.cs">
       <DependentUpon>FileDashboard.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="FileDashboard.aspx.designer.cs">
+      <DependentUpon>FileDashboard.aspx</DependentUpon>
     </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>

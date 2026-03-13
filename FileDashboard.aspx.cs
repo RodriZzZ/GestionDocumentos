@@ -1,14 +1,17 @@
 ﻿using System;
-using System.Web.UI;
-using System.Web.UI.WebControls;
+using System.Linq;
 
 namespace GestionDocumentos
 {
-    public partial class FileDashboard : Page
+    public partial class FileDashboard : System.Web.UI.Page
     {
         protected void Page_Load(object sender, EventArgs e)
         {
 
+        }
+
+        protected void BtnUploadFile_Click(object sender, EventArgs e)
+        {
         }
     }
 }

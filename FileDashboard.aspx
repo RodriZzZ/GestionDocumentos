@@ -3,11 +3,11 @@
 <asp:Content ID="FileDashboardContent" ContentPlaceHolderID="MainContent" runat="server">
     <div class="container-fluid">
         <div class="row">
-
             <aside class="col-md-3 col-lg-2 mb-4">
                 <div class="d-grid gap-2 mb-4">
-                    <asp:Button ID="BtnUpdateFile" runat="server" Text="Subir archivo"
-                        CssClass="btn btn-primary shadow-sm rounded-pill fw-bold" />
+                    <button type="button" class="btn btn-outline-primary shadow-sm rounded-pill fw-bold" data-bs-toggle="modal" data-bs-target="#modalUploadFile">
+                        Subir archivo
+                    </button>
                 </div>
 
                 <div class="list-group shadow-sm">
@@ -68,8 +68,38 @@
                             </div>
                         </div>
                     </div>
+                </div>
             </section>
 
+        </div>
+    </div>
+    
+    <div class="modal fade" id="modalUploadFile" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+      
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold" id="tituloModal">Subir nuevo archivo</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+      
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label text-muted">Selecciona el archivo:</label>
+                        <asp:FileUpload ID="FupFile" runat="server" CssClass="form-control" />
+                    </div>
+        
+                    <asp:Label ID="LblFileData" runat="server" CssClass="d-block mt-2"></asp:Label>
+                </div>
+      
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">Cancelar</button>
+        
+                    <asp:Button ID="BtnUploadFile" runat="server" Text="Subir archivo" 
+                                CssClass="btn btn-primary shadow-sm rounded-pill fw-bold" OnClick="BtnUploadFile_Click" />
+                </div>
+
+            </div>
         </div>
     </div>
 </asp:Content>
