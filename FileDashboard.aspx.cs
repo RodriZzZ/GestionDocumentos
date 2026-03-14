@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Data;
-using System.IO;
 using System.Linq;
-using System.Linq.Expressions;
 using GestionDocumentos.Data;
 
 namespace GestionDocumentos
@@ -23,6 +20,19 @@ namespace GestionDocumentos
             {
                 var ctx = new GestionDocumentosEntities();
 
+                /*
+
+                // CORRER ESTO PRIMERO PARA TENER UN USUARIO EN DB
+                ctx.sp_CreateUser(
+                    firstName: "Admin",
+                    lastName: "Admin",
+                    email: "admin@admin.com",
+                    passwordHash: HashPassword("admin1234"),
+                    roleId: 1
+                    );
+
+
+                // LUEGO CORRER ESTO
                 var filename = Path.GetFileNameWithoutExtension(FupFile.FileName);
                 var extension = Path.GetExtension(FupFile.FileName);
 
@@ -33,11 +43,17 @@ namespace GestionDocumentos
                     fileContent: FupFile.FileBytes,
                     fileSizeInBytes: FupFile.PostedFile.ContentLength
                 );
+                */
             }
             catch (Exception exception)
             {
                 LblFileData.Text = $"Error: {exception.Message}";
             }
+        }
+
+        private string HashPassword(string password)
+        {
+            return BCrypt.Net.BCrypt.HashPassword(password, salt: BCrypt.Net.BCrypt.GenerateSalt(10));
         }
 
         private void LoadDocuments()
