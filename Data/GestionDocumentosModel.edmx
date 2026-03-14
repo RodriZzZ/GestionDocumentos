@@ -166,6 +166,13 @@
           <Parameter Name="PasswordHash" Type="nvarchar" Mode="In" />
           <Parameter Name="RoleId" Type="int" Mode="In" />
         </Function>
+        <Function Name="sp_DownloadDocument" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="DocumentId" Type="int" Mode="In" />
+          <Parameter Name="Version" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_GetDocumentsByUser" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="UserId" Type="int" Mode="In" />
+        </Function>
         <Function Name="sp_UploadNewDocument" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="Name" Type="nvarchar" Mode="In" />
           <Parameter Name="FileExtension" Type="varchar" Mode="In" />
@@ -440,7 +447,28 @@
             <Parameter Name="FileContent" Mode="In" Type="Binary" />
             <Parameter Name="FileSizeInBytes" Mode="In" Type="Int64" />
           </FunctionImport>
+          <FunctionImport Name="sp_DownloadDocument" ReturnType="Collection(GestionDocumentosModel.sp_DownloadDocument_Result)">
+            <Parameter Name="DocumentId" Mode="In" Type="Int32" />
+            <Parameter Name="Version" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_GetDocumentsByUser" ReturnType="Collection(GestionDocumentosModel.sp_GetDocumentsByUser_Result)">
+            <Parameter Name="UserId" Mode="In" Type="Int32" />
+          </FunctionImport>
         </EntityContainer>
+        <ComplexType Name="sp_DownloadDocument_Result">
+          <Property Type="String" Name="name" Nullable="false" MaxLength="255" />
+          <Property Type="String" Name="file_extension" Nullable="false" MaxLength="10" />
+          <Property Type="Binary" Name="file_content" Nullable="false" />
+          <Property Type="Int64" Name="file_size_in_bytes" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="sp_GetDocumentsByUser_Result">
+          <Property Type="Int32" Name="DocumentId" Nullable="false" />
+          <Property Type="String" Name="DocumentName" Nullable="false" MaxLength="255" />
+          <Property Type="String" Name="FileExtension" Nullable="false" MaxLength="10" />
+          <Property Type="Int64" Name="FileSize" Nullable="true" />
+          <Property Type="DateTime" Name="UploadDate" Nullable="true" Precision="23" />
+          <Property Type="Int32" Name="VersionNumber" Nullable="false" />
+        </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -513,6 +541,28 @@
           </EntitySetMapping>
           <FunctionImportMapping FunctionImportName="sp_CreateUser" FunctionName="GestionDocumentosModel.Store.sp_CreateUser" />
           <FunctionImportMapping FunctionImportName="sp_UploadNewDocument" FunctionName="GestionDocumentosModel.Store.sp_UploadNewDocument" />
+          <FunctionImportMapping FunctionImportName="sp_DownloadDocument" FunctionName="GestionDocumentosModel.Store.sp_DownloadDocument">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GestionDocumentosModel.sp_DownloadDocument_Result">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="file_extension" ColumnName="file_extension" />
+                <ScalarProperty Name="file_content" ColumnName="file_content" />
+                <ScalarProperty Name="file_size_in_bytes" ColumnName="file_size_in_bytes" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_GetDocumentsByUser" FunctionName="GestionDocumentosModel.Store.sp_GetDocumentsByUser">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GestionDocumentosModel.sp_GetDocumentsByUser_Result">
+                <ScalarProperty Name="DocumentId" ColumnName="DocumentId" />
+                <ScalarProperty Name="DocumentName" ColumnName="DocumentName" />
+                <ScalarProperty Name="FileExtension" ColumnName="FileExtension" />
+                <ScalarProperty Name="FileSize" ColumnName="FileSize" />
+                <ScalarProperty Name="UploadDate" ColumnName="UploadDate" />
+                <ScalarProperty Name="VersionNumber" ColumnName="VersionNumber" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

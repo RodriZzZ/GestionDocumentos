@@ -84,5 +84,27 @@ namespace GestionDocumentos.Data
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<int>>("sp_UploadNewDocument", nameParameter, fileExtensionParameter, ownerUserIdParameter, fileContentParameter, fileSizeInBytesParameter);
         }
+    
+        public virtual ObjectResult<sp_DownloadDocument_Result> sp_DownloadDocument(Nullable<int> documentId, Nullable<int> version)
+        {
+            var documentIdParameter = documentId.HasValue ?
+                new ObjectParameter("DocumentId", documentId) :
+                new ObjectParameter("DocumentId", typeof(int));
+    
+            var versionParameter = version.HasValue ?
+                new ObjectParameter("Version", version) :
+                new ObjectParameter("Version", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_DownloadDocument_Result>("sp_DownloadDocument", documentIdParameter, versionParameter);
+        }
+    
+        public virtual ObjectResult<sp_GetDocumentsByUser_Result> sp_GetDocumentsByUser(Nullable<int> userId)
+        {
+            var userIdParameter = userId.HasValue ?
+                new ObjectParameter("UserId", userId) :
+                new ObjectParameter("UserId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_GetDocumentsByUser_Result>("sp_GetDocumentsByUser", userIdParameter);
+        }
     }
 }

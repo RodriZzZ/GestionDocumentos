@@ -269,6 +269,12 @@
     <Compile Include="Data\Roles.cs">
       <DependentUpon>GestionDocumentosModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Data\sp_DownloadDocument_Result.cs">
+      <DependentUpon>GestionDocumentosModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\sp_GetDocumentsByUser_Result.cs">
+      <DependentUpon>GestionDocumentosModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Data\UserDocumentAccess.cs">
       <DependentUpon>GestionDocumentosModel.tt</DependentUpon>
     </Compile>

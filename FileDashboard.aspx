@@ -59,11 +59,25 @@
                             </div>
 
                             <div class="table-responsive">
-                                <asp:GridView ID="GridView1" runat="server"
-                                    CssClass="table table-hover align-middle"
-                                    GridLines="None"
-                                    AutoGenerateColumns="true">
+                                <asp:GridView ID="GvDocuments" runat="server"
+                                    CssClass="table table-hover align-middle" AutoGenerateColumns="false"
+                                    GridLines="None">
                                     <HeaderStyle CssClass="table-light text-muted small text-uppercase" />
+                                    
+                                    <Columns>
+                                        <asp:BoundField DataField="DocumentName" HeaderText="Nombre del Archivo" />
+                                        <asp:BoundField DataField="FileExtension" HeaderText="Tipo" />
+                                        
+                                        <asp:TemplateField HeaderText="Tamaño">
+                                            <ItemTemplate>
+                                                <%# FormatSize(Eval("FileSize")) %>
+                                            </ItemTemplate>
+                                        </asp:TemplateField>
+
+                                        <asp:BoundField DataField="UploadDate" HeaderText="Fecha de Subida" DataFormatString="{0:dd/MM/yyyy}" />
+                                        <asp:BoundField DataField="VersionNumber" HeaderText="Versión" />
+
+                                    </Columns>
                                 </asp:GridView>
                             </div>
                         </div>
