@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="9df38ea1e3684908aa98b9f52e474ef3" Name="Diagram1">
+        <EntityTypeShape EntityType="GestionDocumentosModel.DocumentAccess" Width="1.5" PointX="8.25" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="GestionDocumentosModel.Documents" Width="1.5" PointX="5.25" PointY="4.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="GestionDocumentosModel.DocumentVersion" Width="1.5" PointX="7.5" PointY="4.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="GestionDocumentosModel.Roles" Width="1.5" PointX="0.75" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="GestionDocumentosModel.UserDocumentAccess" Width="1.5" PointX="10.5" PointY="4.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="GestionDocumentosModel.Users" Width="1.5" PointX="3" PointY="4" IsExpanded="true" />
+        <AssociationConnector Association="GestionDocumentosModel.FK_Access" ManuallyRouted="false" />
+        <AssociationConnector Association="GestionDocumentosModel.FK_Document_Access" ManuallyRouted="false" />
+        <AssociationConnector Association="GestionDocumentosModel.FK_Owner_User" ManuallyRouted="false" />
+        <AssociationConnector Association="GestionDocumentosModel.FK_Version_Document" ManuallyRouted="false" />
+        <AssociationConnector Association="GestionDocumentosModel.FK_Version_Uploading_User" ManuallyRouted="false" />
+        <AssociationConnector Association="GestionDocumentosModel.FK_Roles_Users" ManuallyRouted="false" />
+        <AssociationConnector Association="GestionDocumentosModel.FK_Access_Granted_By_User" ManuallyRouted="false" />
+        <AssociationConnector Association="GestionDocumentosModel.FK_Access_Granted_To_User" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

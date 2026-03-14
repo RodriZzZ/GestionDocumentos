@@ -1,0 +1,539 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="GestionDocumentosModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="DocumentAccess">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="25" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Documents">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="file_extension" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="owner_user_id" Type="int" Nullable="false" />
+          <Property Name="created_at" Type="datetime" />
+        </EntityType>
+        <EntityType Name="DocumentVersion">
+          <Key>
+            <PropertyRef Name="version_id" />
+          </Key>
+          <Property Name="version_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="row_id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="document_id" Type="int" Nullable="false" />
+          <Property Name="version_number" Type="int" Nullable="false" />
+          <Property Name="file_content" Type="varbinary(max)" Nullable="false" />
+          <Property Name="file_size_in_bytes" Type="bigint" />
+          <Property Name="uploaded_at" Type="datetime" />
+          <Property Name="uploading_user_id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Roles">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="name" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UserDocumentAccess">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="document_id" Type="int" Nullable="false" />
+          <Property Name="access_granted_to_user_id" Type="int" Nullable="false" />
+          <Property Name="permission_id" Type="int" Nullable="false" />
+          <Property Name="access_granted_by_user_id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Users">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="first_name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="last_name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="institutional_email" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="password" Type="nvarchar" MaxLength="256" Nullable="false" />
+          <Property Name="role_id" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Access">
+          <End Role="DocumentAccess" Type="Self.DocumentAccess" Multiplicity="1" />
+          <End Role="UserDocumentAccess" Type="Self.UserDocumentAccess" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DocumentAccess">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="UserDocumentAccess">
+              <PropertyRef Name="permission_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Access_Granted_By_User">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="UserDocumentAccess" Type="Self.UserDocumentAccess" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="UserDocumentAccess">
+              <PropertyRef Name="access_granted_by_user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Access_Granted_To_User">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="UserDocumentAccess" Type="Self.UserDocumentAccess" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="UserDocumentAccess">
+              <PropertyRef Name="access_granted_to_user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Document_Access">
+          <End Role="Documents" Type="Self.Documents" Multiplicity="1" />
+          <End Role="UserDocumentAccess" Type="Self.UserDocumentAccess" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Documents">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="UserDocumentAccess">
+              <PropertyRef Name="document_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Owner_User">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="Documents" Type="Self.Documents" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Documents">
+              <PropertyRef Name="owner_user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Roles_Users">
+          <End Role="Roles" Type="Self.Roles" Multiplicity="1" />
+          <End Role="Users" Type="Self.Users" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Roles">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Users">
+              <PropertyRef Name="role_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Version_Document">
+          <End Role="Documents" Type="Self.Documents" Multiplicity="1" />
+          <End Role="DocumentVersion" Type="Self.DocumentVersion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Documents">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="DocumentVersion">
+              <PropertyRef Name="document_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Version_Uploading_User">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="DocumentVersion" Type="Self.DocumentVersion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="DocumentVersion">
+              <PropertyRef Name="uploading_user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="sp_CreateUser" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="FirstName" Type="nvarchar" Mode="In" />
+          <Parameter Name="LastName" Type="nvarchar" Mode="In" />
+          <Parameter Name="Email" Type="nvarchar" Mode="In" />
+          <Parameter Name="PasswordHash" Type="nvarchar" Mode="In" />
+          <Parameter Name="RoleId" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_UploadNewDocument" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Name" Type="nvarchar" Mode="In" />
+          <Parameter Name="FileExtension" Type="varchar" Mode="In" />
+          <Parameter Name="OwnerUserId" Type="int" Mode="In" />
+          <Parameter Name="FileContent" Type="varbinary(max)" Mode="In" />
+          <Parameter Name="FileSizeInBytes" Type="bigint" Mode="In" />
+        </Function>
+        <EntityContainer Name="GestionDocumentosModelStoreContainer">
+          <EntitySet Name="DocumentAccess" EntityType="Self.DocumentAccess" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Documents" EntityType="Self.Documents" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DocumentVersion" EntityType="Self.DocumentVersion" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Roles" EntityType="Self.Roles" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserDocumentAccess" EntityType="Self.UserDocumentAccess" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Access" Association="Self.FK_Access">
+            <End Role="DocumentAccess" EntitySet="DocumentAccess" />
+            <End Role="UserDocumentAccess" EntitySet="UserDocumentAccess" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Access_Granted_By_User" Association="Self.FK_Access_Granted_By_User">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="UserDocumentAccess" EntitySet="UserDocumentAccess" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Access_Granted_To_User" Association="Self.FK_Access_Granted_To_User">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="UserDocumentAccess" EntitySet="UserDocumentAccess" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Document_Access" Association="Self.FK_Document_Access">
+            <End Role="Documents" EntitySet="Documents" />
+            <End Role="UserDocumentAccess" EntitySet="UserDocumentAccess" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Owner_User" Association="Self.FK_Owner_User">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Documents" EntitySet="Documents" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Roles_Users" Association="Self.FK_Roles_Users">
+            <End Role="Roles" EntitySet="Roles" />
+            <End Role="Users" EntitySet="Users" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Version_Document" Association="Self.FK_Version_Document">
+            <End Role="Documents" EntitySet="Documents" />
+            <End Role="DocumentVersion" EntitySet="DocumentVersion" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Version_Uploading_User" Association="Self.FK_Version_Uploading_User">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="DocumentVersion" EntitySet="DocumentVersion" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="GestionDocumentosModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="DocumentAccess">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="name" Type="String" MaxLength="25" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="UserDocumentAccess" Relationship="Self.FK_Access" FromRole="DocumentAccess" ToRole="UserDocumentAccess" />
+        </EntityType>
+        <EntityType Name="Documents">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="file_extension" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="owner_user_id" Type="Int32" Nullable="false" />
+          <Property Name="created_at" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="UserDocumentAccess" Relationship="Self.FK_Document_Access" FromRole="Documents" ToRole="UserDocumentAccess" />
+          <NavigationProperty Name="Users" Relationship="Self.FK_Owner_User" FromRole="Documents" ToRole="Users" />
+          <NavigationProperty Name="DocumentVersion" Relationship="Self.FK_Version_Document" FromRole="Documents" ToRole="DocumentVersion" />
+        </EntityType>
+        <EntityType Name="DocumentVersion">
+          <Key>
+            <PropertyRef Name="version_id" />
+          </Key>
+          <Property Name="version_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="row_id" Type="Guid" Nullable="false" />
+          <Property Name="document_id" Type="Int32" Nullable="false" />
+          <Property Name="version_number" Type="Int32" Nullable="false" />
+          <Property Name="file_content" Type="Binary" MaxLength="Max" FixedLength="false" Nullable="false" />
+          <Property Name="file_size_in_bytes" Type="Int64" />
+          <Property Name="uploaded_at" Type="DateTime" Precision="3" />
+          <Property Name="uploading_user_id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Documents" Relationship="Self.FK_Version_Document" FromRole="DocumentVersion" ToRole="Documents" />
+          <NavigationProperty Name="Users" Relationship="Self.FK_Version_Uploading_User" FromRole="DocumentVersion" ToRole="Users" />
+        </EntityType>
+        <EntityType Name="Roles">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Users" Relationship="Self.FK_Roles_Users" FromRole="Roles" ToRole="Users" />
+        </EntityType>
+        <EntityType Name="UserDocumentAccess">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="document_id" Type="Int32" Nullable="false" />
+          <Property Name="access_granted_to_user_id" Type="Int32" Nullable="false" />
+          <Property Name="permission_id" Type="Int32" Nullable="false" />
+          <Property Name="access_granted_by_user_id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="DocumentAccess" Relationship="Self.FK_Access" FromRole="UserDocumentAccess" ToRole="DocumentAccess" />
+          <NavigationProperty Name="Documents" Relationship="Self.FK_Document_Access" FromRole="UserDocumentAccess" ToRole="Documents" />
+          <NavigationProperty Name="Users" Relationship="Self.FK_Access_Granted_By_User" FromRole="UserDocumentAccess" ToRole="Users" />
+          <NavigationProperty Name="Users1" Relationship="Self.FK_Access_Granted_To_User" FromRole="UserDocumentAccess" ToRole="Users" />
+        </EntityType>
+        <EntityType Name="Users">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="first_name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="last_name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="institutional_email" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="password" Type="String" MaxLength="256" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="role_id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Documents" Relationship="Self.FK_Owner_User" FromRole="Users" ToRole="Documents" />
+          <NavigationProperty Name="DocumentVersion" Relationship="Self.FK_Version_Uploading_User" FromRole="Users" ToRole="DocumentVersion" />
+          <NavigationProperty Name="Roles" Relationship="Self.FK_Roles_Users" FromRole="Users" ToRole="Roles" />
+          <NavigationProperty Name="UserDocumentAccess" Relationship="Self.FK_Access_Granted_By_User" FromRole="Users" ToRole="UserDocumentAccess" />
+          <NavigationProperty Name="UserDocumentAccess1" Relationship="Self.FK_Access_Granted_To_User" FromRole="Users" ToRole="UserDocumentAccess" />
+        </EntityType>
+        <Association Name="FK_Access">
+          <End Role="DocumentAccess" Type="Self.DocumentAccess" Multiplicity="1" />
+          <End Role="UserDocumentAccess" Type="Self.UserDocumentAccess" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DocumentAccess">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="UserDocumentAccess">
+              <PropertyRef Name="permission_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Document_Access">
+          <End Role="Documents" Type="Self.Documents" Multiplicity="1" />
+          <End Role="UserDocumentAccess" Type="Self.UserDocumentAccess" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Documents">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="UserDocumentAccess">
+              <PropertyRef Name="document_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Owner_User">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="Documents" Type="Self.Documents" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Documents">
+              <PropertyRef Name="owner_user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Version_Document">
+          <End Role="Documents" Type="Self.Documents" Multiplicity="1" />
+          <End Role="DocumentVersion" Type="Self.DocumentVersion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Documents">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="DocumentVersion">
+              <PropertyRef Name="document_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Version_Uploading_User">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="DocumentVersion" Type="Self.DocumentVersion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="DocumentVersion">
+              <PropertyRef Name="uploading_user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Roles_Users">
+          <End Role="Roles" Type="Self.Roles" Multiplicity="1" />
+          <End Role="Users" Type="Self.Users" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Roles">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Users">
+              <PropertyRef Name="role_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Access_Granted_By_User">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="UserDocumentAccess" Type="Self.UserDocumentAccess" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="UserDocumentAccess">
+              <PropertyRef Name="access_granted_by_user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Access_Granted_To_User">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="UserDocumentAccess" Type="Self.UserDocumentAccess" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="UserDocumentAccess">
+              <PropertyRef Name="access_granted_to_user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="GestionDocumentosEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="DocumentAccess" EntityType="Self.DocumentAccess" />
+          <EntitySet Name="Documents" EntityType="Self.Documents" />
+          <EntitySet Name="DocumentVersion" EntityType="Self.DocumentVersion" />
+          <EntitySet Name="Roles" EntityType="Self.Roles" />
+          <EntitySet Name="UserDocumentAccess" EntityType="Self.UserDocumentAccess" />
+          <EntitySet Name="Users" EntityType="Self.Users" />
+          <AssociationSet Name="FK_Access" Association="Self.FK_Access">
+            <End Role="DocumentAccess" EntitySet="DocumentAccess" />
+            <End Role="UserDocumentAccess" EntitySet="UserDocumentAccess" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Document_Access" Association="Self.FK_Document_Access">
+            <End Role="Documents" EntitySet="Documents" />
+            <End Role="UserDocumentAccess" EntitySet="UserDocumentAccess" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Owner_User" Association="Self.FK_Owner_User">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Documents" EntitySet="Documents" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Version_Document" Association="Self.FK_Version_Document">
+            <End Role="Documents" EntitySet="Documents" />
+            <End Role="DocumentVersion" EntitySet="DocumentVersion" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Version_Uploading_User" Association="Self.FK_Version_Uploading_User">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="DocumentVersion" EntitySet="DocumentVersion" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Roles_Users" Association="Self.FK_Roles_Users">
+            <End Role="Roles" EntitySet="Roles" />
+            <End Role="Users" EntitySet="Users" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Access_Granted_By_User" Association="Self.FK_Access_Granted_By_User">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="UserDocumentAccess" EntitySet="UserDocumentAccess" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Access_Granted_To_User" Association="Self.FK_Access_Granted_To_User">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="UserDocumentAccess" EntitySet="UserDocumentAccess" />
+          </AssociationSet>
+          <FunctionImport Name="sp_CreateUser" ReturnType="Collection(Decimal)">
+            <Parameter Name="FirstName" Mode="In" Type="String" />
+            <Parameter Name="LastName" Mode="In" Type="String" />
+            <Parameter Name="Email" Mode="In" Type="String" />
+            <Parameter Name="PasswordHash" Mode="In" Type="String" />
+            <Parameter Name="RoleId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_UploadNewDocument" ReturnType="Collection(Int32)">
+            <Parameter Name="Name" Mode="In" Type="String" />
+            <Parameter Name="FileExtension" Mode="In" Type="String" />
+            <Parameter Name="OwnerUserId" Mode="In" Type="Int32" />
+            <Parameter Name="FileContent" Mode="In" Type="Binary" />
+            <Parameter Name="FileSizeInBytes" Mode="In" Type="Int64" />
+          </FunctionImport>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="GestionDocumentosModelStoreContainer" CdmEntityContainer="GestionDocumentosEntities">
+          <EntitySetMapping Name="DocumentAccess">
+            <EntityTypeMapping TypeName="GestionDocumentosModel.DocumentAccess">
+              <MappingFragment StoreEntitySet="DocumentAccess">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Documents">
+            <EntityTypeMapping TypeName="GestionDocumentosModel.Documents">
+              <MappingFragment StoreEntitySet="Documents">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="file_extension" ColumnName="file_extension" />
+                <ScalarProperty Name="owner_user_id" ColumnName="owner_user_id" />
+                <ScalarProperty Name="created_at" ColumnName="created_at" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DocumentVersion">
+            <EntityTypeMapping TypeName="GestionDocumentosModel.DocumentVersion">
+              <MappingFragment StoreEntitySet="DocumentVersion">
+                <ScalarProperty Name="version_id" ColumnName="version_id" />
+                <ScalarProperty Name="row_id" ColumnName="row_id" />
+                <ScalarProperty Name="document_id" ColumnName="document_id" />
+                <ScalarProperty Name="version_number" ColumnName="version_number" />
+                <ScalarProperty Name="file_content" ColumnName="file_content" />
+                <ScalarProperty Name="file_size_in_bytes" ColumnName="file_size_in_bytes" />
+                <ScalarProperty Name="uploaded_at" ColumnName="uploaded_at" />
+                <ScalarProperty Name="uploading_user_id" ColumnName="uploading_user_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Roles">
+            <EntityTypeMapping TypeName="GestionDocumentosModel.Roles">
+              <MappingFragment StoreEntitySet="Roles">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserDocumentAccess">
+            <EntityTypeMapping TypeName="GestionDocumentosModel.UserDocumentAccess">
+              <MappingFragment StoreEntitySet="UserDocumentAccess">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="document_id" ColumnName="document_id" />
+                <ScalarProperty Name="access_granted_to_user_id" ColumnName="access_granted_to_user_id" />
+                <ScalarProperty Name="permission_id" ColumnName="permission_id" />
+                <ScalarProperty Name="access_granted_by_user_id" ColumnName="access_granted_by_user_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="GestionDocumentosModel.Users">
+              <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="first_name" ColumnName="first_name" />
+                <ScalarProperty Name="last_name" ColumnName="last_name" />
+                <ScalarProperty Name="institutional_email" ColumnName="institutional_email" />
+                <ScalarProperty Name="password" ColumnName="password" />
+                <ScalarProperty Name="role_id" ColumnName="role_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="sp_CreateUser" FunctionName="GestionDocumentosModel.Store.sp_CreateUser" />
+          <FunctionImportMapping FunctionImportName="sp_UploadNewDocument" FunctionName="GestionDocumentosModel.Store.sp_UploadNewDocument" />
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="true" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
