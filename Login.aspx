@@ -63,14 +63,14 @@
                     </div>
 
                     <div class="mb-4 text-center">
-                        <asp:TextBox ID="txtUsuario" runat="server" CssClass="form-control input-pill" placeholder="Correo Electrónico"></asp:TextBox>
-                        <asp:RequiredFieldValidator ID="rfvUser" runat="server" ControlToValidate="txtUsuario"
+                        <asp:TextBox ID="TxtUserEmail" runat="server" CssClass="form-control input-pill" placeholder="Correo Electrónico"></asp:TextBox>
+                        <asp:RequiredFieldValidator ID="RfvUserEmail" runat="server" ControlToValidate="TxtUserEmail"
                             ErrorMessage="El usuario es obligatorio." ForeColor="Red" Display="Dynamic" CssClass="small" />
                     </div>
 
                     <div class="mb-4 text-center">
-                        <asp:TextBox ID="txtPassword" runat="server" CssClass="form-control input-pill" TextMode="Password" placeholder="Contraseña"></asp:TextBox>
-                        <asp:RequiredFieldValidator ID="rfvPass" runat="server" ControlToValidate="txtPassword"
+                        <asp:TextBox ID="TxtUserPassword" runat="server" CssClass="form-control input-pill" TextMode="Password" placeholder="Contraseña"></asp:TextBox>
+                        <asp:RequiredFieldValidator ID="RfvPass" runat="server" ControlToValidate="TxtUserPassword"
                             ErrorMessage="La contraseña es obligatoria." ForeColor="Red" Display="Dynamic" CssClass="small" />
                     </div>
 

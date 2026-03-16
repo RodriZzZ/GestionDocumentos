@@ -269,6 +269,7 @@
     <Compile Include="Data\Roles.cs">
       <DependentUpon>GestionDocumentosModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Data\SessionKey.cs" />
     <Compile Include="Data\sp_DownloadDocument_Result.cs">
       <DependentUpon>GestionDocumentosModel.tt</DependentUpon>
     </Compile>
@@ -291,6 +292,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="HashPassword.cs" />
     <Compile Include="Login.aspx.cs">
       <DependentUpon>Login.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

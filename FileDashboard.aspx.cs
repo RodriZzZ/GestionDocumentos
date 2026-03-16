@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using GestionDocumentos.Data;
 
@@ -6,8 +7,18 @@ namespace GestionDocumentos
 {
     public partial class FileDashboard : System.Web.UI.Page
     {
+
+        private int? _userId;
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (Session[SessionKey.UserId] == null)
+            {
+                Response.Redirect("Login.aspx");
+                return;
+            }
+
+            _userId = (int)Session[SessionKey.UserId];
+
             if (!IsPostBack)
             {
                 LoadDocuments();
@@ -16,44 +27,35 @@ namespace GestionDocumentos
 
         protected void BtnUploadFile_Click(object sender, EventArgs e)
         {
+            if (!FupFile.HasFile)
+            {
+                LblFileData.Text = "Por favor, selecciona un archivo antes de subirlo.";
+                LblFileData.CssClass = "text-warning fw-bold d-block mt-2";
+                return;
+            }
+
             try
             {
                 var ctx = new GestionDocumentosEntities();
 
-                /*
-
-                // CORRER ESTO PRIMERO PARA TENER UN USUARIO EN DB
-                ctx.sp_CreateUser(
-                    firstName: "Admin",
-                    lastName: "Admin",
-                    email: "admin@admin.com",
-                    passwordHash: HashPassword("admin1234"),
-                    roleId: 1
-                    );
-
-
-                // LUEGO CORRER ESTO
                 var filename = Path.GetFileNameWithoutExtension(FupFile.FileName);
                 var extension = Path.GetExtension(FupFile.FileName);
 
                 ctx.sp_UploadNewDocument(
                     name: filename,
                     fileExtension: extension,
-                    ownerUserId: 1,
+                    ownerUserId: _userId,
                     fileContent: FupFile.FileBytes,
                     fileSizeInBytes: FupFile.PostedFile.ContentLength
                 );
-                */
+
+                LoadDocuments();
+                LblFileData.Text = "Archivo subido exitosamente.";
             }
             catch (Exception exception)
             {
                 LblFileData.Text = $"Error: {exception.Message}";
             }
-        }
-
-        private string HashPassword(string password)
-        {
-            return BCrypt.Net.BCrypt.HashPassword(password, salt: BCrypt.Net.BCrypt.GenerateSalt(10));
         }
 
         private void LoadDocuments()
@@ -62,7 +64,7 @@ namespace GestionDocumentos
 
             try
             {
-                var res = ctx.sp_GetDocumentsByUser(1).ToList();
+                var res = ctx.sp_GetDocumentsByUser(_userId).ToList();
 
                 GvDocuments.DataSource = res;
                 GvDocuments.DataBind();

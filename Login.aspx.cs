@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
+using GestionDocumentos.Data;
 
 namespace GestionDocumentos
 {
@@ -11,30 +8,37 @@ namespace GestionDocumentos
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            //Page_Load
         }
+
         protected void btnLogin_Click(object sender, EventArgs e)
-        { 
-            if (Page.IsValid)
+        {
+            if (!Page.IsValid) return;
+
+            var ctx = new GestionDocumentosEntities();
+
+            var email = TxtUserEmail.Text;
+            var password = TxtUserPassword.Text;
+
+            var existingUser = ctx.Users.FirstOrDefault(usr => usr.institutional_email == email);
+
+            if (existingUser == null)
             {
-                string correoCorrecto = "example@gmail.com";
-                string claveCorrecta = "utec123";
-
-                if (txtUsuario.Text == correoCorrecto && txtPassword.Text == claveCorrecta)
-                {
-                    Session["Usuario"] = txtUsuario.Text;
-
-                    Response.Redirect("FileDashboard.aspx");
-                }
-                else
-                {
-                    lblMensajeError.Text = "Correo o contraseña incorrectos.";
-                    lblMensajeError.Visible = true;
-
-                    txtUsuario.Text = "";
-                    txtPassword.Focus();
-                }
+                lblMensajeError.Text = "No se encontró un usuario con ese correo electrónico.";
+                return;
             }
+
+            var hashedInputPassword = HashPassword.Hash(password);
+
+            var validPassword = existingUser.password != hashedInputPassword;
+
+            if (!validPassword)
+            {
+                lblMensajeError.Text = "Credenciales incorrectas. Si crees que se trata de un error, contacta con el administrador.";
+                return;
+            }
+
+            Session[SessionKey.UserId] = existingUser.id;
+            Response.Redirect("FileDashboard.aspx");
         }
     }
 }
