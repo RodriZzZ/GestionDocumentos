@@ -33,13 +33,10 @@
                         <li class="nav-item">
                             <a class="nav-link px-3" href="FileDashboard.aspx">Inicio</a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item" id="LiUsers" runat="server">
                             <a class="nav-link px-3" href="AdminUsuarios.aspx">Usuarios</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link px-3" href="AdminUsuarioForm.aspx">Crear Usuario</a>
-                        </li>
-                        <li class="nav-item">
+                        <li class="nav-item" id="LiDocumentType" runat="server">
                             <a class="nav-link px-3" href="TipoDocumento.aspx">Tipos de Documento</a>
                         </li>
                     </ul>

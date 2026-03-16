@@ -38,6 +38,8 @@ namespace GestionDocumentos
             }
 
             Session[SessionKey.UserId] = existingUser.id;
+            Session[SessionKey.UserRole] = existingUser.role_id;
+
             Response.Redirect("FileDashboard.aspx");
         }
     }
