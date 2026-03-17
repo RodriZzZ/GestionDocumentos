@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using GestionDocumentos.Data;
+using WebGrease;
 
 namespace GestionDocumentos
 {
@@ -27,7 +28,8 @@ namespace GestionDocumentos
 
         protected void BtnUploadFile_Click(object sender, EventArgs e)
         {
-            if (!FupFile.HasFile)
+            var file = InputFile.PostedFile;
+            if (file == null)
             {
                 LblFileData.Text = "Por favor, selecciona un archivo antes de subirlo.";
                 LblFileData.CssClass = "text-warning fw-bold d-block mt-2";
@@ -38,18 +40,22 @@ namespace GestionDocumentos
             {
                 var ctx = new GestionDocumentosEntities();
 
-                var filename = Path.GetFileNameWithoutExtension(FupFile.FileName);
-                var extension = Path.GetExtension(FupFile.FileName);
+                var filename = Path.GetFileNameWithoutExtension(file.FileName);
+                var extension = Path.GetExtension(file.FileName);
 
-                ctx.sp_UploadNewDocument(
+                var binaryReader = new BinaryReader(file.InputStream);
+                var fileContent = binaryReader.ReadBytes(file.ContentLength);
+
+                var id = ctx.sp_UploadNewDocument(
                     name: filename,
                     fileExtension: extension,
                     ownerUserId: _userId,
-                    fileContent: FupFile.FileBytes,
-                    fileSizeInBytes: FupFile.PostedFile.ContentLength
-                );
+                    fileContent: fileContent,
+                    fileSizeInBytes: file.ContentLength
+                ).FirstOrDefault();
 
                 LoadDocuments();
+                LblLoggedUserWelcome.Text = $"{id}";
                 LblFileData.Text = "Archivo subido exitosamente.";
             }
             catch (Exception exception)

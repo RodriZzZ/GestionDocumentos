@@ -99,8 +99,8 @@
       
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label class="form-label text-muted">Selecciona el archivo:</label>
-                        <asp:FileUpload ID="FupFile" runat="server" CssClass="form-control" />
+                        <label class="form-label text-muted" for="InputFile">Selecciona el archivo:</label>
+                        <input type="file" id="InputFile" runat="server"/>
                     </div>
         
                     <asp:Label ID="LblFileData" runat="server" CssClass="d-block mt-2"></asp:Label>
