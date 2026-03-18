@@ -1,98 +1,93 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MenuPrincipal.master" AutoEventWireup="true" CodeBehind="AdminUsuarioForm.aspx.cs" Inherits="GestionDocumentos.AdminUsuarioEdit" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
+    <div class="container mt-5 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            
+            <div class="card shadow-sm border-0 rounded-3">
+                <div class="card-body p-4 p-md-5">
+                    
+                    <h2 class="text-center mb-4 fw-bold text-primary">Crear nuevo usuario</h2>
 
-    <div class="container mt-4">
-        <div class="row justify-content-center">
-            <div class="col-md-8 col-lg-6">
+                    <div class="mb-3">
+                        <asp:Label runat="server" ID="LblUserFirstName" Text="Nombres" CssClass="form-label small fw-bold text-muted" />
+                        <asp:TextBox runat="server" ID="TxtUserFirstName" CssClass="form-control shadow-sm" placeholder="Ej. Juan Carlos" />
+                        
+                        <asp:RequiredFieldValidator runat="server" ControlToValidate="TxtUserFirstName" 
+                            ErrorMessage="* El nombre es obligatorio." CssClass="text-danger small mt-1" 
+                            Display="Dynamic" ValidationGroup="UserInfo" />
+                        
+                        <asp:RegularExpressionValidator runat="server" ControlToValidate="TxtUserFirstName" 
+                            ValidationExpression="^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$" 
+                            ErrorMessage="* Solo se permiten letras, sin números ni símbolos." 
+                            CssClass="text-danger small mt-1" Display="Dynamic" ValidationGroup="UserInfo" />
+                    </div>
+                    
+                    <div class="mb-3">
+                        <asp:Label runat="server" ID="LblUserLastName" Text="Apellidos" CssClass="form-label small fw-bold text-muted" />
+                        <asp:TextBox runat="server" ID="TxtUserLastName" CssClass="form-control shadow-sm" placeholder="Ej. Pérez" />
+                        
+                        <asp:RequiredFieldValidator runat="server" ControlToValidate="TxtUserLastName" 
+                            ErrorMessage="* El apellido es obligatorio." CssClass="text-danger small mt-1" 
+                            Display="Dynamic" ValidationGroup="UserInfo" />
+                            
+                        <asp:RegularExpressionValidator runat="server" ControlToValidate="TxtUserLastName" 
+                            ValidationExpression="^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$" 
+                            ErrorMessage="* Solo se permiten letras, sin números ni símbolos." 
+                            CssClass="text-danger small mt-1" Display="Dynamic" ValidationGroup="UserInfo" />
+                    </div>
 
+                    <div class="mb-3">
+                        <asp:Label runat="server" ID="LblUserEmail" Text="Correo Electrónico" CssClass="form-label small fw-bold text-muted" />
+                        <asp:TextBox runat="server" ID="TxtUserEmail" TextMode="Email" CssClass="form-control shadow-sm" placeholder="correo@ejemplo.com" />
+                        
+                        <asp:RequiredFieldValidator runat="server" ControlToValidate="TxtUserEmail" 
+                            ErrorMessage="* El correo es obligatorio." CssClass="text-danger small mt-1" 
+                            Display="Dynamic" ValidationGroup="UserInfo" />
+                            
+                        <asp:RegularExpressionValidator runat="server" ControlToValidate="TxtUserEmail" 
+                            ValidationExpression="^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$" 
+                            ErrorMessage="* Ingresa un correo electrónico válido." 
+                            CssClass="text-danger small mt-1" Display="Dynamic" ValidationGroup="UserInfo" />
+                    </div>
+                    
+                    <div class="mb-4">
+                        <asp:Label runat="server" ID="LblPassword" Text="Contraseña" CssClass="form-label small fw-bold text-muted" />
+                        <asp:TextBox runat="server" ID="TxtPassword" TextMode="Password" CssClass="form-control shadow-sm" placeholder="••••••••" />
+                        
+                        <asp:RequiredFieldValidator runat="server" ControlToValidate="TxtPassword" 
+                            ErrorMessage="* La contraseña es obligatoria." CssClass="text-danger small mt-1" 
+                            Display="Dynamic" ValidationGroup="UserInfo" />
+                            
+                        <asp:RegularExpressionValidator runat="server" ControlToValidate="TxtPassword" 
+                            ValidationExpression="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$" 
+                            ErrorMessage="* Debe tener al menos 6 caracteres, una mayúscula, una minúscula y un número." 
+                            CssClass="text-danger small mt-1" Display="Dynamic" ValidationGroup="UserInfo" />
+                    </div>
 
-                <h2 id="tituloForm" class="text-center mb-3">Formulario de Usuario</h2>
+                    <div class="mb-4">
+                        <asp:Label runat="server" ID="LblRole" Text="Rol del usuario" CssClass="form-label small fw-bold text-muted" />
+                        <asp:DropDownList runat="server" ID="DdlRole" CssClass="form-select shadow-sm" />
 
+                        <asp:RequiredFieldValidator runat="server" ControlToValidate="DdlRole" InitialValue="0"
+                            ErrorMessage="* Debes seleccionar un rol válido." CssClass="text-danger small mt-1" 
+                            Display="Dynamic" ValidationGroup="UserInfo" />
+                    </div>
 
-                <div id="alertaEdicion" class="alert alert-info d-none">
-                    Editando usuario con Id: <strong id="textoId"></strong>
+                    <div class="d-flex justify-content-end gap-2 mt-4 pt-3 border-top">
+                        <a href="AdminUsuarios.aspx" class="btn btn-light rounded-pill px-4 shadow-sm border">Cancelar</a>
+                        
+                        <asp:Button runat="server" ID="BtnSaveUser" Text="Guardar Usuario" 
+                            CssClass="btn btn-primary rounded-pill px-4 shadow-sm fw-bold" 
+                            ValidationGroup="UserInfo" OnClick="BtnSaveUser_Click"/>
+                        <asp:Label ID="LblError" CssClass="text-danger small mt-1" runat="server" />
+                    </div>
+
                 </div>
-
-
-                <div class="mb-3">
-                    <label class="form-label">Nombres</label>
-                    <input id="txtNombres" type="text" class="form-control" placeholder="Ingrese nombres" />
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">Apellidos</label>
-                    <input id="txtApellidos" type="text" class="form-control" placeholder="Ingrese apellidos" />
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">Nombre de Usuario</label>
-                    <input id="txtUsuario" type="text" class="form-control" placeholder="Ingrese usuario" />
-                </div>
-
-                <div class="d-flex gap-2">
-                    <a href="AdminUsuarios.aspx" class="btn btn-secondary">Cancelar</a>
-                    <button type="button" id="btnGuardar" class="btn btn-primary">Guardar</button>
-                </div>
-
-
-                <!-- Mensaje "simulado" (solo frontend) -->
-                <div id="msg" class="alert alert-success mt-3 d-none"></div>
-
             </div>
+
         </div>
     </div>
-
-    <script>
-        (function () {
-            // 1) Detectar si hay ?id= en la URL
-            const params = new URLSearchParams(window.location.search);
-            const id = params.get('id');
-
-            const titulo = document.getElementById('tituloForm');
-            const alerta = document.getElementById('alertaEdicion');
-            const textoId = document.getElementById('textoId');
-
-            const txtNombres = document.getElementById('txtNombres');
-            const txtApellidos = document.getElementById('txtApellidos');
-            const txtUsuario = document.getElementById('txtUsuario');
-
-            const btnGuardar = document.getElementById('btnGuardar');
-            const msg = document.getElementById('msg');
-
-            // 2) Modo Crear vs Editar (solo visual)
-            if (id) {
-                // Modo EDITAR
-                titulo.textContent = 'Editar Usuario';
-                alerta.classList.remove('d-none');
-                textoId.textContent = id;
-
-                // (Opcional) Relleno simulado para "editar"
-                txtNombres.value = 'Nombre ' + id;
-                txtApellidos.value = 'Apellido ' + id;
-                txtUsuario.value = 'usuario' + id;
-            } else {
-                // Modo CREAR
-                titulo.textContent = 'Crear Usuario';
-                alerta.classList.add('d-none');
-            }
-
-            // 3) Guardar (simulado; no hay backend)
-            btnGuardar.addEventListener('click', function () {
-                // Sólo mostramos un mensajito para demostrar la interacción
-                msg.textContent = id
-                    ? 'Cambios (simulados) guardados para el ID ' + id + '.'
-                    : 'Usuario (simulado) creado.';
-                msg.classList.remove('d-none');
-
-                // (Opcional) Limpiar campos si es "crear"
-                if (!id) {
-                    txtNombres.value = '';
-                    txtApellidos.value = '';
-                    txtUsuario.value = '';
-                }
-            });
-        })();
-    </script>
-
+</div>
 </asp:Content>
