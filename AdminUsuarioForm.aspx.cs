@@ -7,6 +7,7 @@ namespace GestionDocumentos
 {
     public partial class AdminUsuarioEdit : Page
     {
+        private int _editUserId;
         protected void Page_Load(object sender, EventArgs e)
         {
             if (Session[SessionKey.UserRole] == null || (SystemRoles)Session[SessionKey.UserRole] != SystemRoles.Admin)
@@ -16,9 +17,47 @@ namespace GestionDocumentos
                 return;
             }
 
-            if (!IsPostBack)
+            if (Request.QueryString["id"] != null)
             {
-                LoadRoles();
+                int.TryParse(Request.QueryString["id"], out _editUserId);
+            }
+
+            if (IsPostBack) return;
+
+            LoadRoles();
+
+            if (_editUserId > 0)
+            {
+                LoadUserData(_editUserId);
+                LblTitle.Text = $"Actualizar usuario {_editUserId}";
+                BtnUpsertUser.Text = "Actualizar usuario";
+                ReqPassword.Enabled = false;
+            }
+            else
+            {
+                LblTitle.Text = "Crear usuario";
+                BtnUpsertUser.Text = "Guardar usuario";
+            }
+        }
+
+        private void LoadUserData(int editUserId)
+        {
+            try
+            {
+                var ctx = new GestionDocumentosEntities();
+
+                var user = ctx.Users.Find(editUserId);
+
+                if (user == null) return;
+
+                TxtUserEmail.Text = user.institutional_email;
+                TxtUserFirstName.Text = user.first_name;
+                TxtUserLastName.Text = user.last_name;
+                DdlRole.SelectedValue = user.role_id.ToString();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
             }
         }
 
@@ -37,28 +76,54 @@ namespace GestionDocumentos
             DdlRole.Items.Insert(0, new System.Web.UI.WebControls.ListItem("Selecciona un rol", "0"));
         }
 
-        protected void BtnSaveUser_Click(object sender, EventArgs e)
+        protected void BtnUpsertUser_Click(object sender, EventArgs e)
         {
-
             if (!Page.IsValid) return;
-            LblError.Text = string.Empty;
-
-            var firstName = TxtUserFirstName.Text;
-            var lastName = TxtUserLastName.Text;
-            var email = TxtUserEmail.Text;
-            var password = TxtPassword.Text;
-            var roleId = Convert.ToInt16(DdlRole.SelectedItem.Value);
 
             try
             {
+                LblError.Text = string.Empty;
+
+                var firstName = TxtUserFirstName.Text.Trim();
+                var lastName = TxtUserLastName.Text.Trim();
+                var email = TxtUserEmail.Text.Trim();
+                var password = TxtPassword.Text;
+                var roleId = Convert.ToInt16(DdlRole.SelectedItem.Value);
+
                 var ctx = new GestionDocumentosEntities();
-                ctx.sp_CreateUser(
-                    firstName: firstName,
-                    lastName: lastName,
-                    email: email,
-                    passwordHash: HashPassword.Hash(password),
-                    roleId: roleId
+
+                if (_editUserId == 0)
+                {
+                    ctx.sp_CreateUser(
+                        firstName: firstName,
+                        lastName: lastName,
+                        email: email,
+                        passwordHash: HashPassword.Hash(password),
+                        roleId: roleId
                     );
+                }
+                else
+                {
+                    var editUser = ctx.Users.Find(_editUserId);
+
+                    if (editUser == null)
+                    {
+                        LblError.Text = $"No se encontró al usuario {_editUserId}";
+                        return;
+                    }
+
+                    editUser.first_name = firstName;
+                    editUser.last_name = lastName;
+                    editUser.institutional_email = email;
+                    editUser.role_id = roleId;
+
+                    if (!string.IsNullOrWhiteSpace(password))
+                    {
+                        editUser.password = HashPassword.Hash(password);
+                    }
+
+                    ctx.SaveChanges();
+                }
 
                 Response.Redirect("AdminUsuarios.aspx");
                 Context.ApplicationInstance.CompleteRequest();

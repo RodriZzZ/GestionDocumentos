@@ -15,6 +15,15 @@ namespace GestionDocumentos
     {
 
         /// <summary>
+        /// LblTitle control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label LblTitle;
+
+        /// <summary>
         /// LblUserFirstName control.
         /// </summary>
         /// <remarks>
@@ -87,6 +96,15 @@ namespace GestionDocumentos
         protected global::System.Web.UI.WebControls.TextBox TxtPassword;
 
         /// <summary>
+        /// ReqPassword control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator ReqPassword;
+
+        /// <summary>
         /// LblRole control.
         /// </summary>
         /// <remarks>
@@ -105,13 +123,13 @@ namespace GestionDocumentos
         protected global::System.Web.UI.WebControls.DropDownList DdlRole;
 
         /// <summary>
-        /// BtnSaveUser control.
+        /// BtnUpsertUser control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button BtnSaveUser;
+        protected global::System.Web.UI.WebControls.Button BtnUpsertUser;
 
         /// <summary>
         /// LblError control.
