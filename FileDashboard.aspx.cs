@@ -54,9 +54,10 @@ namespace GestionDocumentos
                     fileSizeInBytes: file.ContentLength
                 ).FirstOrDefault();
 
-                LoadDocuments();
-                LblLoggedUserWelcome.Text = $"{id}";
                 LblFileData.Text = "Archivo subido exitosamente.";
+
+                Response.Redirect(Request.RawUrl);
+                Context.ApplicationInstance.CompleteRequest();
             }
             catch (Exception exception)
             {
