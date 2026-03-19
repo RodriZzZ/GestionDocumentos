@@ -139,16 +139,6 @@
     <Content Include="Content\bootstrap.rtl.css" />
     <Content Include="Content\bootstrap.rtl.min.css" />
     <Content Include="Content\Site.css" />
-    <Content Include="Data\GestionDocumentosModel.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>GestionDocumentosModel.Context.cs</LastGenOutput>
-      <DependentUpon>GestionDocumentosModel.edmx</DependentUpon>
-    </Content>
-    <Content Include="Data\GestionDocumentosModel.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>GestionDocumentosModel.edmx</DependentUpon>
-      <LastGenOutput>GestionDocumentosModel.cs</LastGenOutput>
-    </Content>
     <Content Include="favicon.ico" />
     <Content Include="FileDashboard.aspx" />
     <Content Include="Global.asax" />
@@ -183,13 +173,6 @@
     <Content Include="Content\bootstrap-grid.min.css.map" />
     <Content Include="Content\bootstrap-grid.css.map" />
     <Content Include="MenuPrincipal.master" />
-    <EntityDeploy Include="Data\GestionDocumentosModel.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>GestionDocumentosModel.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <Content Include="Data\GestionDocumentosModel.edmx.diagram">
-      <DependentUpon>GestionDocumentosModel.edmx</DependentUpon>
-    </Content>
     <None Include="Scripts\jquery-3.7.0.intellisense.js" />
     <Content Include="Scripts\jquery-3.7.0.js" />
     <Content Include="Scripts\jquery-3.7.0.min.js" />
@@ -242,47 +225,8 @@
     </Compile>
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
-    <Compile Include="Data\DocumentAccess.cs">
-      <DependentUpon>GestionDocumentosModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Data\Documents.cs">
-      <DependentUpon>GestionDocumentosModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Data\DocumentVersion.cs">
-      <DependentUpon>GestionDocumentosModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Data\GestionDocumentosModel.Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>GestionDocumentosModel.Context.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Data\GestionDocumentosModel.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>GestionDocumentosModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Data\GestionDocumentosModel.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>GestionDocumentosModel.edmx</DependentUpon>
-    </Compile>
-    <Compile Include="Data\Roles.cs">
-      <DependentUpon>GestionDocumentosModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="Data\SessionKey.cs" />
-    <Compile Include="Data\sp_DownloadDocument_Result.cs">
-      <DependentUpon>GestionDocumentosModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Data\sp_GetDocumentsByUser_Result.cs">
-      <DependentUpon>GestionDocumentosModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="Data\SystemRoles.cs" />
-    <Compile Include="Data\UserDocumentAccess.cs">
-      <DependentUpon>GestionDocumentosModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Data\Users.cs">
-      <DependentUpon>GestionDocumentosModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="FileDashboard.aspx.cs">
       <DependentUpon>FileDashboard.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
