@@ -1,13 +1,15 @@
-﻿using GestionDocumentos.Data;
-using System;
-using System.Linq;
+﻿using System;
+using System.Data;
+using System.Data.SqlClient;
 using System.Web.UI;
+using GestionDocumentos.Data;
 
 namespace GestionDocumentos
 {
-    public partial class AdminUsuarioEdit : Page
+    public partial class AdminUsuarioForm : Page
     {
         private int _editUserId;
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if (Session[SessionKey.UserRole] == null || (SystemRoles)Session[SessionKey.UserRole] != SystemRoles.Admin)
@@ -44,16 +46,25 @@ namespace GestionDocumentos
         {
             try
             {
-                var ctx = new GestionDocumentosEntities();
+                using (var conn = Database.GetConnection())
+                {
+                    const string query = "SELECT institutional_email, first_name, last_name, role_id FROM Users WHERE id = @id";
 
-                var user = ctx.Users.Find(editUserId);
+                    using (var cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@id", editUserId);
 
-                if (user == null) return;
-
-                TxtUserEmail.Text = user.institutional_email;
-                TxtUserFirstName.Text = user.first_name;
-                TxtUserLastName.Text = user.last_name;
-                DdlRole.SelectedValue = user.role_id.ToString();
+                        conn.Open();
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            if (!reader.Read()) return;
+                            TxtUserEmail.Text = reader["institutional_email"].ToString();
+                            TxtUserFirstName.Text = reader["first_name"].ToString();
+                            TxtUserLastName.Text = reader["last_name"].ToString();
+                            DdlRole.SelectedValue = reader["role_id"].ToString();
+                        }
+                    }
+                }
             }
             catch (Exception e)
             {
@@ -63,17 +74,34 @@ namespace GestionDocumentos
 
         private void LoadRoles()
         {
-            var ctx = new GestionDocumentosEntities();
+            try
+            {
+                using (var conn = Database.GetConnection())
+                {
+                    const string query = "SELECT id, name FROM Roles";
 
-            var roles = ctx.Roles.ToList();
+                    using (var cmd = new SqlCommand(query, conn))
+                    {
+                        using (var sda = new SqlDataAdapter(cmd))
+                        {
+                            var dtRoles = new DataTable();
+                            sda.Fill(dtRoles);
 
-            DdlRole.Items.Clear();
+                            DdlRole.Items.Clear();
+                            DdlRole.DataSource = dtRoles;
+                            DdlRole.DataTextField = "name";
+                            DdlRole.DataValueField = "id";
+                            DdlRole.DataBind();
+                        }
+                    }
+                }
 
-            DdlRole.DataSource = roles;
-            DdlRole.DataTextField = "name";
-            DdlRole.DataValueField = "id";  
-            DdlRole.DataBind();
-            DdlRole.Items.Insert(0, new System.Web.UI.WebControls.ListItem("Selecciona un rol", "0"));
+                DdlRole.Items.Insert(0, new System.Web.UI.WebControls.ListItem("Selecciona un rol", "0"));
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
 
         protected void BtnUpsertUser_Click(object sender, EventArgs e)
@@ -90,42 +118,62 @@ namespace GestionDocumentos
                 var password = TxtPassword.Text;
                 var roleId = Convert.ToInt16(DdlRole.SelectedItem.Value);
 
-                var ctx = new GestionDocumentosEntities();
-
-                if (_editUserId == 0)
+                using (var conn = Database.GetConnection())
                 {
-                    ctx.sp_CreateUser(
-                        firstName: firstName,
-                        lastName: lastName,
-                        email: email,
-                        passwordHash: HashPassword.Hash(password),
-                        roleId: roleId
-                    );
-                }
-                else
-                {
-                    var editUser = ctx.Users.Find(_editUserId);
+                    conn.Open();
 
-                    if (editUser == null)
+                    if (_editUserId == 0)
                     {
-                        LblError.Text = $"No se encontró al usuario {_editUserId}";
-                        return;
+                        // Usamos el Stored Procedure para crear
+                        using (SqlCommand cmd = new SqlCommand("sp_CreateUser", conn))
+                        {
+                            cmd.CommandType = CommandType.StoredProcedure;
+
+                            cmd.Parameters.AddWithValue("@FirstName", firstName);
+                            cmd.Parameters.AddWithValue("@LastName", lastName);
+                            cmd.Parameters.AddWithValue("@Email", email);
+                            cmd.Parameters.AddWithValue("@PasswordHash", HashPassword.Hash(password));
+                            cmd.Parameters.AddWithValue("@RoleId", roleId);
+
+                            cmd.ExecuteNonQuery();
+                        }
                     }
-
-                    editUser.first_name = firstName;
-                    editUser.last_name = lastName;
-                    editUser.institutional_email = email;
-                    editUser.role_id = roleId;
-
-                    if (!string.IsNullOrWhiteSpace(password))
+                    else
                     {
-                        editUser.password = HashPassword.Hash(password);
-                    }
+                        // Actualización dinámica dependiendo de si ingresó contraseña nueva o no
+                        var updateQuery = "UPDATE Users SET first_name = @firstName, last_name = @lastName, institutional_email = @email, role_id = @roleId";
 
-                    ctx.SaveChanges();
+                        if (!string.IsNullOrWhiteSpace(password))
+                        {
+                            updateQuery += ", password = @password";
+                        }
+                        updateQuery += " WHERE id = @id";
+
+                        using (var cmd = new SqlCommand(updateQuery, conn))
+                        {
+                            cmd.Parameters.AddWithValue("@firstName", firstName);
+                            cmd.Parameters.AddWithValue("@lastName", lastName);
+                            cmd.Parameters.AddWithValue("@email", email);
+                            cmd.Parameters.AddWithValue("@roleId", roleId);
+                            cmd.Parameters.AddWithValue("@id", _editUserId);
+
+                            if (!string.IsNullOrWhiteSpace(password))
+                            {
+                                cmd.Parameters.AddWithValue("@password", HashPassword.Hash(password));
+                            }
+
+                            var rowsAffected = cmd.ExecuteNonQuery();
+
+                            if (rowsAffected == 0)
+                            {
+                                LblError.Text = $"No se encontró al usuario {_editUserId}";
+                                return;
+                            }
+                        }
+                    }
                 }
 
-                Response.Redirect("AdminUsuarios.aspx");
+                Response.Redirect("AdminUsuarios.aspx", false);
                 Context.ApplicationInstance.CompleteRequest();
             }
             catch (Exception exception)

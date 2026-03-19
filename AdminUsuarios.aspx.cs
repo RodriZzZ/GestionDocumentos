@@ -1,8 +1,9 @@
-﻿using GestionDocumentos.Data;
-using System;
-using System.Linq;
+﻿using System;
+using System.Data;
+using System.Data.SqlClient;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using GestionDocumentos.Data;
 
 namespace GestionDocumentos
 {
@@ -27,51 +28,89 @@ namespace GestionDocumentos
         {
             try
             {
-                var ctx = new GestionDocumentosEntities();
+                using (var conn = Database.GetConnection())
+                {
+                    const string query = @"
+                        SELECT 
+                            id AS Id, 
+                            first_name + ' ' + last_name AS NombreCompleto, 
+                            institutional_email AS Email
+                        FROM Users 
+                        ORDER BY id DESC";
 
-                var users = ctx.Users
-                    .ToList() // -> ef no soporta linq, por eso se parsea a lista
-                    .Select(usr => new
+                    using (var cmd = new SqlCommand(query, conn))
                     {
-                        Id = usr.id,
-                        NombreCompleto = $"{usr.first_name} {usr.last_name}",
-                        Email = usr.institutional_email
-                    })
-                    .OrderByDescending(u => u.Id) // Los más recientes primero
-                    .ToList();
+                        using (var sda = new SqlDataAdapter(cmd))
+                        {
+                            var dtUsers = new DataTable();
+                            sda.Fill(dtUsers);
 
-                GvUsers.DataSource = users;
-                GvUsers.DataBind();
+                            GvUsers.DataSource = dtUsers;
+                            GvUsers.DataBind();
+                        }
+                    }
+                }
             }
             catch (Exception ex)
             {
-                // TODO: cambiar por Label y mensaje adecuado para ui
                 Console.WriteLine(ex.Message);
             }
         }
 
         protected void GvUsers_RowCommand(object sender, GridViewCommandEventArgs e)
         {
+            if (string.IsNullOrEmpty(e.CommandArgument?.ToString())) return;
+
             var userId = Convert.ToInt32(e.CommandArgument);
 
             switch (e.CommandName)
             {
                 case "EditUser":
-                    // Redirigimos al formulario que ya diseñaste, pasándole el ID por la URL
                     Response.Redirect($"AdminUsuarioForm.aspx?id={userId}", false);
                     Context.ApplicationInstance.CompleteRequest();
                     break;
                 case "DeleteUser":
                     DeleteUser(userId);
-                    break;
-                default:
+                    LoadUsers();
                     break;
             }
         }
 
-        private void DeleteUser(int userId)
+        private static void DeleteUser(int userId)
         {
-            // TODO: borrar archivos de user y usuario
+            using (var conn = Database.GetConnection())
+            {
+                conn.Open();
+                using (var transaction = conn.BeginTransaction())
+                {
+                    try
+                    {
+                        // 1. Borrar archivos asociados al usuario 
+                        const string deleteDocsQuery = "DELETE FROM Documents WHERE owner_user_id = @userId";
+                        using (var cmdDocs = new SqlCommand(deleteDocsQuery, conn, transaction))
+                        {
+                            cmdDocs.Parameters.AddWithValue("@userId", userId);
+                            cmdDocs.ExecuteNonQuery();
+                        }
+
+                        // 2. Borrar al usuario
+                        const string deleteUserQuery = "DELETE FROM Users WHERE id = @userId";
+                        using (var cmdUser = new SqlCommand(deleteUserQuery, conn, transaction))
+                        {
+                            cmdUser.Parameters.AddWithValue("@userId", userId);
+                            cmdUser.ExecuteNonQuery();
+                        }
+
+                        // Si llegamos hasta aquí, todo salió bien. Confirmamos los cambios.
+                        transaction.Commit();
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
+                        Console.WriteLine(ex.Message);
+                    }
+                }
+            }
         }
     }
 }

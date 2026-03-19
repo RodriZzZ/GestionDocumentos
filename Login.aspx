@@ -75,7 +75,7 @@
                     </div>
 
                     <div class="mb-3 text-center">
-                        <asp:Label ID="lblMensajeError" runat="server" ForeColor="Red" Visible="false" CssClass="small fw-bold"></asp:Label>
+                        <asp:Label ID="lblMensajeError" runat="server" ForeColor="Red" CssClass="small fw-bold"></asp:Label>
                     </div>
 
                     <div class="d-grid gap-2 mb-4">

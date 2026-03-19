@@ -1,10 +1,11 @@
 ﻿using System;
-using System.Linq;
+using System.Data.SqlClient;
+using System.Web.UI;
 using GestionDocumentos.Data;
 
 namespace GestionDocumentos
 {
-    public partial class Login : System.Web.UI.Page
+    public partial class Login : Page
     {
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -14,33 +15,54 @@ namespace GestionDocumentos
         {
             if (!Page.IsValid) return;
 
-            var ctx = new GestionDocumentosEntities();
-
-            var email = TxtUserEmail.Text;
+            // Limpiamos los espacios en blanco del correo por seguridad
+            var email = TxtUserEmail.Text.Trim();
             var password = TxtUserPassword.Text;
 
-            var existingUser = ctx.Users.FirstOrDefault(usr => usr.institutional_email == email);
-
-            if (existingUser == null)
+            try
             {
-                lblMensajeError.Text = "No se encontró un usuario con ese correo electrónico.";
-                return;
+                using (var conn = Database.GetConnection())
+                {
+                    const string query = "SELECT id, password, role_id FROM Users WHERE institutional_email = @email";
+
+                    using (var cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@email", email);
+
+                        conn.Open();
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read()) 
+                            {
+                                var dbPasswordHash = reader["password"].ToString();
+                                var userId = Convert.ToInt32(reader["id"]);
+                                var roleId = Convert.ToInt32(reader["role_id"]);
+
+                                if (!BCrypt.Net.BCrypt.Verify(password, dbPasswordHash))
+                                {
+                                    lblMensajeError.Text = "Credenciales incorrectas. Si crees que se trata de un error, contacta con el administrador.";
+                                    return;
+                                }
+
+                                // Si todo está bien, asignamos las sesiones
+                                Session[SessionKey.UserId] = userId;
+                                Session[SessionKey.UserRole] = roleId;
+                                Response.Redirect("FileDashboard.aspx", false);
+                                Context.ApplicationInstance.CompleteRequest();
+                            }
+                            else
+                            {
+                                lblMensajeError.Text = "No se encontró un usuario con ese correo electrónico.";
+                            }
+                        }
+                    }
+                }
             }
-
-            var hashedInputPassword = HashPassword.Hash(password);
-
-            var validPassword = existingUser.password != hashedInputPassword;
-
-            if (!validPassword)
+            catch (Exception ex)
             {
-                lblMensajeError.Text = "Credenciales incorrectas. Si crees que se trata de un error, contacta con el administrador.";
-                return;
+                Console.WriteLine(ex);
+                lblMensajeError.Text = "Ocurrió un error al intentar iniciar sesión. Por favor, intenta más tarde.";
             }
-
-            Session[SessionKey.UserId] = existingUser.id;
-            Session[SessionKey.UserRole] = existingUser.role_id;
-
-            Response.Redirect("FileDashboard.aspx");
         }
     }
 }

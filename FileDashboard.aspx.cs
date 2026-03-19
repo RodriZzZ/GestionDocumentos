@@ -1,20 +1,22 @@
 ﻿using System;
+using System.Data;
+using System.Data.SqlClient;
 using System.IO;
-using System.Linq;
+using System.Web.UI;
 using GestionDocumentos.Data;
-using WebGrease;
 
 namespace GestionDocumentos
 {
-    public partial class FileDashboard : System.Web.UI.Page
+    public partial class FileDashboard : Page
     {
+        private int _userId;
 
-        private int? _userId;
         protected void Page_Load(object sender, EventArgs e)
         {
             if (Session[SessionKey.UserId] == null)
             {
-                Response.Redirect("Login.aspx");
+                Response.Redirect("Login.aspx", false);
+                Context.ApplicationInstance.CompleteRequest();
                 return;
             }
 
@@ -29,52 +31,78 @@ namespace GestionDocumentos
         protected void BtnUploadFile_Click(object sender, EventArgs e)
         {
             var file = InputFile.PostedFile;
-            if (file == null)
+
+            if (file == null || file.ContentLength == 0)
             {
-                LblFileData.Text = "Por favor, selecciona un archivo antes de subirlo.";
+                LblFileData.Text = "Por favor, selecciona un archivo válido antes de subirlo.";
                 LblFileData.CssClass = "text-warning fw-bold d-block mt-2";
                 return;
             }
 
             try
             {
-                var ctx = new GestionDocumentosEntities();
-
                 var filename = Path.GetFileNameWithoutExtension(file.FileName);
                 var extension = Path.GetExtension(file.FileName);
+                byte[] fileContent;
 
-                var binaryReader = new BinaryReader(file.InputStream);
-                var fileContent = binaryReader.ReadBytes(file.ContentLength);
+                using (var binaryReader = new BinaryReader(file.InputStream))
+                {
+                    fileContent = binaryReader.ReadBytes(file.ContentLength);
+                }
 
-                var id = ctx.sp_UploadNewDocument(
-                    name: filename,
-                    fileExtension: extension,
-                    ownerUserId: _userId,
-                    fileContent: fileContent,
-                    fileSizeInBytes: file.ContentLength
-                ).FirstOrDefault();
+                using (var conn = Database.GetConnection())
+                {
+                    using (var cmd = new SqlCommand("sp_UploadNewDocument", conn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        cmd.Parameters.AddWithValue("@Name", filename);
+                        cmd.Parameters.AddWithValue("@FileExtension", extension);
+                        cmd.Parameters.AddWithValue("@OwnerUserId", _userId);
+                        cmd.Parameters.AddWithValue("@FileContent", fileContent);
+                        cmd.Parameters.AddWithValue("@FileSizeInBytes", file.ContentLength);
+
+                        conn.Open();
+                        cmd.ExecuteScalar();
+
+                    }
+                }
 
                 LblFileData.Text = "Archivo subido exitosamente.";
+                LblFileData.CssClass = "text-success fw-bold d-block mt-2";
 
-                Response.Redirect(Request.RawUrl);
-                Context.ApplicationInstance.CompleteRequest();
+                // // Recargamos la página para limpiar el input y mostrar el nuevo archivo en la grilla
+                // Response.Redirect(Request.RawUrl, false);
+                // Context.ApplicationInstance.CompleteRequest();
             }
             catch (Exception exception)
             {
                 LblFileData.Text = $"Error: {exception.Message}";
+                LblFileData.CssClass = "text-danger fw-bold d-block mt-2";
             }
         }
 
         private void LoadDocuments()
         {
-            var ctx = new GestionDocumentosEntities();
-
             try
             {
-                var res = ctx.sp_GetDocumentsByUser(_userId).ToList();
+                using (var conn = Database.GetConnection())
+                {
+                    using (var cmd = new SqlCommand("sp_GetDocumentsByUser", conn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@UserId", _userId);
 
-                GvDocuments.DataSource = res;
-                GvDocuments.DataBind();
+                        using (var sda = new SqlDataAdapter(cmd))
+                        {
+                            var dtDocuments = new DataTable();
+                            sda.Fill(dtDocuments);
+
+                            GvDocuments.DataSource = dtDocuments;
+                            GvDocuments.DataBind();
+                        }
+                    }
+                }
             }
             catch (Exception e)
             {
@@ -84,7 +112,7 @@ namespace GestionDocumentos
 
         protected string FormatSize(object fileSizeInBytes)
         {
-            if (fileSizeInBytes == null)
+            if (fileSizeInBytes == null || fileSizeInBytes == DBNull.Value)
                 return "0 KB";
 
             var bytes = Convert.ToDouble(fileSizeInBytes);
@@ -97,6 +125,5 @@ namespace GestionDocumentos
 
             return bytes + " Bytes";
         }
-
     }
 }

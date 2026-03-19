@@ -11,7 +11,7 @@ namespace GestionDocumentos
 {
 
 
-    public partial class AdminUsuarioEdit
+    public partial class AdminUsuarioForm
     {
 
         /// <summary>

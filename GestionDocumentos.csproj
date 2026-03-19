@@ -225,6 +225,7 @@
     </Compile>
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Data\Database.cs" />
     <Compile Include="Data\SessionKey.cs" />
     <Compile Include="Data\SystemRoles.cs" />
     <Compile Include="FileDashboard.aspx.cs">
