@@ -1,4 +1,4 @@
-﻿<%@ Page Title="Title" Language="C#" MasterPageFile="~/MenuPrincipal.Master" CodeBehind="FileDashboard.aspx.cs" Inherits="GestionDocumentos.FileDashboard" %>
+﻿<%@ Page Title="Mis archivos" Language="C#" MasterPageFile="~/MenuPrincipal.Master" CodeBehind="FileDashboard.aspx.cs" Inherits="GestionDocumentos.FileDashboard" %>
 
 <asp:Content ID="FileDashboardContent" ContentPlaceHolderID="MainContent" runat="server">
     <div class="container-fluid">

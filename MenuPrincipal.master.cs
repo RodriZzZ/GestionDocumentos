@@ -17,19 +17,15 @@ namespace GestionDocumentos
 
         private void ConfigMenu()
         {
-            if (Session[AuthKey.UserRole] != null)
+            if (Session[AuthKey.UserRole] == null)
             {
-                var role = Convert.ToInt16(Session[AuthKey.UserRole]);
-                if (role == 1) return;
+                LiUsers.Visible = false;
+            }
 
-                LiDocumentType.Visible = false;
-                LiUsers.Visible = false;
-            }
-            else
-            {
-                LiUsers.Visible = false;
-                LiDocumentType.Visible = false;
-            }
+            var role = Convert.ToInt16(Session[AuthKey.UserRole]);
+            if (role == 1) return;
+
+            LiUsers.Visible = false;
         }
 
         protected void btnCerrarSesion_Click(object sender, EventArgs e)

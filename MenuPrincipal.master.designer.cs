@@ -33,15 +33,6 @@ namespace GestionDocumentos
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl LiUsers;
 
         /// <summary>
-        /// LiDocumentType control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl LiDocumentType;
-
-        /// <summary>
         /// btnExit control.
         /// </summary>
         /// <remarks>

@@ -1,8 +1,8 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MenuPrincipal.master" AutoEventWireup="true" CodeBehind="AdminUsuarios.aspx.cs" Inherits="GestionDocumentos.AdminUsuarios" %>
+﻿<%@ Page Title="Usuarios" Language="C#" MasterPageFile="~/MenuPrincipal.master" AutoEventWireup="true" CodeBehind="AdminUsuarios.aspx.cs" Inherits="GestionDocumentos.AdminUsuarios" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
     <div class="container">
-        <h1 class="text-center">Administrador de Usuario</h1>
+        <h1 class="text-center">Usuarios del sistema</h1>
         <div class="row">
             <div class="w-100 d-flex justify-content-start">
                 <a class="btn btn-primary mb-3" href="AdminUsuarioForm.aspx">Crear usuario</a>
