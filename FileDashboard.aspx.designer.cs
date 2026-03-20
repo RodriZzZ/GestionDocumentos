@@ -15,31 +15,13 @@ namespace GestionDocumentos
     {
 
         /// <summary>
-        /// LblLoggedUserWelcome control.
+        /// DdlSort control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label LblLoggedUserWelcome;
-
-        /// <summary>
-        /// ddlTipoDocumento control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlTipoDocumento;
-
-        /// <summary>
-        /// FilterOptions control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList FilterOptions;
+        protected global::System.Web.UI.WebControls.DropDownList DdlSort;
 
         /// <summary>
         /// LblTxtSearchFile control.
@@ -67,6 +49,15 @@ namespace GestionDocumentos
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button BtnSearchFile;
+
+        /// <summary>
+        /// BtnResetFilter control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button BtnResetFilter;
 
         /// <summary>
         /// GvDocuments control.

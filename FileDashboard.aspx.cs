@@ -28,7 +28,7 @@ namespace GestionDocumentos
 
             if (!IsPostBack)
             {
-                LoadAllDocuments();
+                LoadDocuments();
             }
         }
 
@@ -83,7 +83,7 @@ namespace GestionDocumentos
                 LblFileData.CssClass = "text-danger fw-bold d-block mt-2";
             }
         }
-        private void LoadAllDocuments()
+        private void LoadDocuments(string filename = null)
         {
             try
             {
@@ -93,7 +93,10 @@ namespace GestionDocumentos
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
                         cmd.Parameters.AddWithValue("@UserId", _userId);
+                        cmd.Parameters.AddWithValue("@SortOption", Convert.ToInt16(DdlSort.SelectedValue));
+                        cmd.Parameters.AddWithValue("@FileName", (object)filename ?? DBNull.Value);
 
+                        conn.Open();
                         using (var sda = new SqlDataAdapter(cmd))
                         {
                             var dtDocuments = new DataTable();
@@ -129,54 +132,7 @@ namespace GestionDocumentos
 
         protected void BtnSearchFile_OnClick(object sender, EventArgs e)
         {
-            var fileName = TxtSearchFile.Text.Trim();
-
-            if (string.IsNullOrWhiteSpace(fileName))
-            {
-                LoadAllDocuments();
-                return;
-            }
-
-            try
-            {
-                using (var conn = Database.GetConnection())
-                {
-                    // TODO: Pasar a sp
-                    const string query = @"
-                                SELECT 
-                                    d.id AS DocumentId, 
-                                    d.name AS DocumentName, 
-                                    d.file_extension AS FileExtension, 
-                                    v.file_size_in_bytes AS FileSize,
-                                    v.uploaded_at AS UploadDate,
-                                    v.version_number AS VersionNumber
-                                FROM Documents d
-                                INNER JOIN DocumentVersion v ON d.id = v.document_id
-                                WHERE d.owner_user_id = @userId
-                                AND d.name LIKE '%' + @fileName + '%'";
-
-                    using (var cmd = new SqlCommand(query, conn))
-                    {
-                        cmd.Parameters.AddWithValue("@userId", _userId);
-                        cmd.Parameters.AddWithValue("@fileName", fileName);
-
-
-                        using (var sda = new SqlDataAdapter(cmd))
-                        {
-                            var dtDocuments = new DataTable();
-                            sda.Fill(dtDocuments);
-
-                            GvDocuments.DataSource = dtDocuments;
-                            GvDocuments.DataBind();
-                        }
-                    }
-                }
-            }
-            catch (Exception exception)
-            {
-                LblFileData.Text = "Error en la búsqueda: " + exception.Message;
-                LblFileData.CssClass = "text-danger";
-            }
+            LoadDocuments(TxtSearchFile.Text.Trim());
         }
 
         protected void GvDocuments_OnRowCommand(object sender, GridViewCommandEventArgs e)
@@ -213,7 +169,7 @@ namespace GestionDocumentos
                     }
                 }
 
-                LoadAllDocuments();
+                LoadDocuments();
             }
             catch (SqlException ex)
             {
@@ -271,6 +227,18 @@ namespace GestionDocumentos
             {
                 // LblError
             }
+        }
+
+        protected void BtnResetFilter_OnClick(object sender, EventArgs e)
+        {
+            TxtSearchFile.Text = string.Empty;
+            DdlSort.SelectedIndex = 0;
+            LoadDocuments();
+        }
+
+        protected void DdlSort_OnSelectedIndexChanged(object sender, EventArgs e)
+        {
+            LoadDocuments(TxtSearchFile.Text.Trim());
         }
     }
 }

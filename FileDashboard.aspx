@@ -25,36 +25,29 @@
                     <div class="card-body p-4">
                         <div class="d-flex justify-content-between align-items-center mb-4">
                             <h2 class="fw-bold m-0">Mis archivos</h2>
-                            <asp:Label ID="LblLoggedUserWelcome" runat="server" CssClass="badge bg-light text-dark p-2 border"></asp:Label>
                         </div>
 
                         <div class="row g-3 mb-4 bg-light p-3 rounded-3 border">
-
-                            <div class="row g-3 mb-4 align-items-end bg-light p-3 rounded-3 border mx-0">
-                                <div class="col-md-3">
-                                    <label class="form-label small fw-bold text-muted">Tipo de Documento</label>
-                                    <asp:DropDownList ID="ddlTipoDocumento" runat="server" CssClass="form-select shadow-sm">
-                                        <asp:ListItem Value="0">-- Todos los tipos --</asp:ListItem>
-                                        <asp:ListItem Value="1">PDF</asp:ListItem>
-                                        <asp:ListItem Value="2">Excel</asp:ListItem>
-                                        <asp:ListItem Value="3">Imagen</asp:ListItem>
-                                    </asp:DropDownList>
-                                </div>
+                            <div class="row mb-4 align-items-top justify-content-center bg-light p-3 rounded-3 border mx-0">
                                 <div class="col-md-6">
                                     <label class="small text-muted mb-1">Ordenar por:</label>
-                                    <asp:DropDownList ID="FilterOptions" runat="server" CssClass="form-select">
-                                        <asp:ListItem Value="0">Por fecha ascendente</asp:ListItem>
-                                        <asp:ListItem Value="1">Por fecha descendente</asp:ListItem>
-                                        <asp:ListItem Value="2">Por nombre ascendente</asp:ListItem>
-                                        <asp:ListItem Value="3">Por nombre descendente</asp:ListItem>
+                                    <asp:DropDownList ID="DdlSort" runat="server" CssClass="form-select" OnSelectedIndexChanged="DdlSort_OnSelectedIndexChanged">
+                                        <asp:ListItem Value="0">Por fecha descendente</asp:ListItem>
+                                        <asp:ListItem Value="1">Por fecha ascendente</asp:ListItem>
+                                        <asp:ListItem Value="2">Por nombre descendente</asp:ListItem>
+                                        <asp:ListItem Value="3">Por nombre ascendente</asp:ListItem>
                                     </asp:DropDownList>
                                 </div>
                                 <div class="col-md-6">
                                     <asp:Label class="small text-muted mb-1" ID="LblTxtSearchFile" runat="server" Text="Buscar documento"/>
                                     <div class="input-group shadow-sm">
                                         <asp:TextBox ID="TxtSearchFile" runat="server" CssClass="form-control" placeholder="Nombre del archivo..."/>
-                                        <asp:Button ID="BtnSearchFile" OnClick="BtnSearchFile_OnClick" runat="server" CssClass="btn btn-primary" Text="Buscar"/>
                                     </div>
+                                </div>
+
+                                <div class="row justify-content-end mt-4">
+                                    <asp:Button ID="BtnSearchFile" OnClick="BtnSearchFile_OnClick" runat="server" CssClass="btn btn-primary w-50 me-4" Text="Buscar"/>
+                                    <asp:Button ID="BtnResetFilter" OnClick="BtnResetFilter_OnClick" runat="server" CssClass="btn btn btn-outline-secondary w-25" Text="Limpiar"/>
                                 </div>
                             </div>
 
@@ -95,10 +88,24 @@
                                                 </div>
                                             </ItemTemplate>
                                         </asp:TemplateField>
-
                                     </Columns>
+                                    
+                                    <EmptyDataTemplate>
+                                        <div class="text-center py-5">
+                                            <i class="bi bi-folder-x display-1 text-muted opacity-50 mb-3"></i>
+                                            <h4 class="fw-bold text-secondary">No hay documentos para mostrar</h4>
+                                            <p class="text-muted mb-4">Parece que tu espacio está vacío o tu búsqueda no arrojó resultados.</p>
+
+                                            <button type="button" class="btn btn-primary rounded-pill shadow-sm px-4 py-2 fw-bold" 
+                                                    data-bs-toggle="modal" data-bs-target="#modalUploadFile">
+                                                Subir nuevo archivo
+                                            </button>
+                                        </div>
+                                    </EmptyDataTemplate>
                                 </asp:GridView>
                             </div>
+                            
+
                         </div>
                     </div>
                 </div>
