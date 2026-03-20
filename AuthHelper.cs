@@ -22,9 +22,11 @@ namespace GestionDocumentos
 
             // Si no hay sesión, buscamos la cookie
             var authCookie = request.Cookies[AuthKey.SessionCookie];
-
-
-            if (authCookie != null && authCookie.Expires > DateTime.Now)
+            if (
+                authCookie != null &&
+                !string.IsNullOrEmpty(authCookie[AuthKey.UserId]) && 
+                !string.IsNullOrEmpty(authCookie[AuthKey.UserRole])
+                )
             {
                 // Re-hidratamos la sesión desde la cookie
                 session[AuthKey.UserId] = Convert.ToInt32(authCookie[AuthKey.UserId]);
@@ -51,11 +53,9 @@ namespace GestionDocumentos
         public static void ValidateAdmin(Page page)
         {
             ValidateSession(page);
+            var role = Convert.ToInt16(page.Session[AuthKey.UserRole]);
 
-            if (page.Session[AuthKey.UserRole] is SystemRoles role)
-            {
-                if (role == SystemRoles.Admin) return; // Es admin, todo bien.
-            }
+            if (role == (int)SystemRoles.Admin) return;
 
             page.Response.Redirect("FileDashboard.aspx", false);
             HttpContext.Current.ApplicationInstance.CompleteRequest();
