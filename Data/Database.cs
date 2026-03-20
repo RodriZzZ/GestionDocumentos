@@ -5,7 +5,8 @@ namespace GestionDocumentos.Data
 {
     public static class Database
     {
-        private static string DbConnectionString = "GestionDocumentosCadenaDB";
+        private const string DbConnectionString = "GestionDocumentosCadenaDB";
+
         public static SqlConnection GetConnection()
         {
             return new SqlConnection(ConfigurationManager.ConnectionStrings[DbConnectionString].ConnectionString);
