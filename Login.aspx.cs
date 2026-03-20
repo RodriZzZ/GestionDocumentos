@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data.SqlClient;
+using System.Web;
 using System.Web.UI;
 using GestionDocumentos.Data;
 
@@ -38,15 +39,18 @@ namespace GestionDocumentos
                                 var userId = Convert.ToInt32(reader["id"]);
                                 var roleId = Convert.ToInt32(reader["role_id"]);
 
-                                if (!BCrypt.Net.BCrypt.Verify(password, dbPasswordHash))
+                                if (!HashPassword.Verify(password, dbPasswordHash))
                                 {
                                     lblMensajeError.Text = "Credenciales incorrectas. Si crees que se trata de un error, contacta con el administrador.";
                                     return;
                                 }
 
                                 // Si todo está bien, asignamos las sesiones
-                                Session[SessionKey.UserId] = userId;
-                                Session[SessionKey.UserRole] = roleId;
+                                AuthHelper.Login(
+                                    page: this, 
+                                    userId: userId, 
+                                    roleId: roleId);
+
                                 Response.Redirect("FileDashboard.aspx", false);
                                 Context.ApplicationInstance.CompleteRequest();
                             }

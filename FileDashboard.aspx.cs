@@ -13,14 +13,11 @@ namespace GestionDocumentos
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (Session[SessionKey.UserId] == null)
-            {
-                Response.Redirect("Login.aspx", false);
-                Context.ApplicationInstance.CompleteRequest();
-                return;
-            }
+            AuthHelper.ValidateSession(this);
 
-            _userId = (int)Session[SessionKey.UserId];
+            if (Response.IsRequestBeingRedirected) return;
+
+            _userId = (int)Session[AuthKey.UserId];
 
             if (!IsPostBack)
             {
@@ -137,7 +134,7 @@ namespace GestionDocumentos
             {
                 using (var conn = Database.GetConnection())
                 {
-                    // Pasar a sp
+                    // TODO: Pasar a sp
                     const string query = @"
                                 SELECT 
                                     d.id AS DocumentId, 

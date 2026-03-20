@@ -225,8 +225,9 @@
     </Compile>
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="AuthHelper.cs" />
     <Compile Include="Data\Database.cs" />
-    <Compile Include="Data\SessionKey.cs" />
+    <Compile Include="Data\AuthKey.cs" />
     <Compile Include="Data\SystemRoles.cs" />
     <Compile Include="FileDashboard.aspx.cs">
       <DependentUpon>FileDashboard.aspx</DependentUpon>

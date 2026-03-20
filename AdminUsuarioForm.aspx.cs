@@ -12,12 +12,7 @@ namespace GestionDocumentos
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (Session[SessionKey.UserRole] == null || (SystemRoles)Session[SessionKey.UserRole] != SystemRoles.Admin)
-            {
-                Response.Redirect("FileDashboard.aspx", false);
-                Context.ApplicationInstance.CompleteRequest();
-                return;
-            }
+            AuthHelper.ValidateAdmin(this);
 
             if (Request.QueryString["id"] != null)
             {
