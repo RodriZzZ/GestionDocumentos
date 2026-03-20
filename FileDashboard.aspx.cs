@@ -1,15 +1,22 @@
-﻿using System;
+﻿using GestionDocumentos.Data;
+using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
+using System.Web;
 using System.Web.UI;
-using GestionDocumentos.Data;
+using System.Web.UI.WebControls;
 
 namespace GestionDocumentos
 {
     public partial class FileDashboard : Page
     {
         private int _userId;
+        private int EditDocumentId
+        {
+            get => ViewState["EditDocumentId"] != null ? (int)ViewState["EditDocumentId"] : 0;
+            set => ViewState["EditDocumentId"] = value;
+        }
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -169,6 +176,100 @@ namespace GestionDocumentos
             {
                 LblFileData.Text = "Error en la búsqueda: " + exception.Message;
                 LblFileData.CssClass = "text-danger";
+            }
+        }
+
+        protected void GvDocuments_OnRowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            var documentId = Convert.ToInt32(e.CommandArgument);
+            switch (e.CommandName)
+            {
+                case "DeleteFile":
+                    DeleteFile(documentId);
+                    break;
+                case "NewVersion":
+                    EditDocumentId = documentId;
+                    ScriptManager.RegisterStartupScript(this, GetType(), "showEditModal",
+                        "new bootstrap.Modal(document.getElementById('modalNewVersion')).show();", true);
+                    break;
+            }
+        }
+
+        private void DeleteFile(int documentId)
+        {
+            try
+            {
+                using (var conn = Database.GetConnection())
+                {
+                    using (var cmd = new SqlCommand("sp_DeleteDocument", conn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        cmd.Parameters.AddWithValue("@DocumentId", documentId);
+                        cmd.Parameters.AddWithValue("@UserId", _userId);
+
+                        conn.Open();
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+
+                LoadAllDocuments();
+            }
+            catch (SqlException ex)
+            {
+                // TODO: Lbl para error
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+        protected void BtnSubmitVersion_Click(object sender, EventArgs e)
+        {
+            if (!FupNewVersion.HasFile) return;
+            if (EditDocumentId == 0) return;
+
+            try
+            {
+                var file = FupNewVersion.PostedFile;
+                var extension = Path.GetExtension(file.FileName); // por si cambia (no deberia, pero es lógica de negocio)
+                byte[] fileContent;
+                var fileSize = file.ContentLength; // Dejar acá porque despues de hacer el binary reader se resetea a 0
+
+                using (var binaryReader = new BinaryReader(file.InputStream))
+                {
+                    fileContent = binaryReader.ReadBytes(file.ContentLength);
+                }
+
+                using (var conn = Database.GetConnection())
+                {
+                    using (var cmd = new SqlCommand("sp_AddNewDocumentVersion", conn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        // Parámetros exactos de tu SP
+                        cmd.Parameters.AddWithValue("@DocumentId", EditDocumentId);
+                        cmd.Parameters.AddWithValue("@UploadingUserId", _userId);
+                        cmd.Parameters.AddWithValue("@FileContent", fileContent);
+                        cmd.Parameters.AddWithValue("@FileSizeInBytes", fileSize);
+                        cmd.Parameters.AddWithValue("@FileExtension", extension);
+
+                        conn.Open();
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+
+                Response.Redirect(Request.RawUrl, false);
+                Context.ApplicationInstance.CompleteRequest();
+            }
+            catch (SqlException ex)
+            {
+                // LblError
+            }
+            catch (Exception ex)
+            {
+                // LblError
             }
         }
     }

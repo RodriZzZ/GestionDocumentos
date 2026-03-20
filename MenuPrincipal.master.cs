@@ -36,10 +36,13 @@ namespace GestionDocumentos
         {
             Session.Clear();
             Session.Abandon();
-
             if (Request.Cookies[AuthKey.SessionCookie] != null)
             {
-                Response.Cookies.Remove(AuthKey.SessionCookie);
+                var expiredCookie = new HttpCookie(AuthKey.SessionCookie)
+                {
+                    Expires = DateTime.Now.AddDays(-1) 
+                };
+                Response.Cookies.Add(expiredCookie);
             }
 
             Response.Redirect("Login.aspx");

@@ -61,7 +61,9 @@
                             <div class="table-responsive">
                                 <asp:GridView ID="GvDocuments" runat="server"
                                     CssClass="table table-hover align-middle" AutoGenerateColumns="false"
-                                    GridLines="None">
+                                    GridLines="None"
+                                              OnRowCommand="GvDocuments_OnRowCommand"
+                                              >
                                     <HeaderStyle CssClass="table-light text-muted small text-uppercase" />
                                     
                                     <Columns>
@@ -76,6 +78,23 @@
 
                                         <asp:BoundField DataField="UploadDate" HeaderText="Fecha de Subida" DataFormatString="{0:dd/MM/yyyy}" />
                                         <asp:BoundField DataField="VersionNumber" HeaderText="Versión" />
+                                        
+                                        <asp:TemplateField HeaderText="Acciones">
+                                            <ItemTemplate>
+                                                <div class="d-flex gap-2">
+                                                    <asp:LinkButton ID="BtnEdit" runat="server" CssClass="btn btn-sm btn-outline-primary"
+                                                                    CommandName="NewVersion" CommandArgument='<%# Eval("DocumentId") %>'>
+                                                        Nueva versión
+                                                    </asp:LinkButton>
+
+                                                    <asp:LinkButton ID="BtnDelete" runat="server" CssClass="btn btn-sm btn-outline-danger"
+                                                                    CommandName="DeleteFile" CommandArgument='<%# Eval("DocumentId") %>'
+                                                                    OnClientClick="return confirm('¿Estás seguro de que deseas eliminar este documento y todas sus versiones?');">
+                                                        Eliminar
+                                                    </asp:LinkButton>
+                                                </div>
+                                            </ItemTemplate>
+                                        </asp:TemplateField>
 
                                     </Columns>
                                 </asp:GridView>
@@ -87,7 +106,8 @@
 
         </div>
     </div>
-    
+
+    <%-- region: Modal para subir el archivo --%>
     <div class="modal fade" id="modalUploadFile" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -116,4 +136,30 @@
             </div>
         </div>
     </div>
+    <%-- endregion --%>
+    
+    <%-- region: Modal para nueva versión de archivo existente --%>
+    <div class="modal fade" id="modalNewVersion" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title fw-bold">Subir Nueva Versión</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-muted small">Selecciona el archivo actualizado. El sistema incrementará automáticamente el número de versión.</p>
+                    <div class="mb-3">
+                        <asp:FileUpload ID="FupNewVersion" runat="server" CssClass="form-control" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">Cancelar</button>
+                    <asp:Button ID="BtnSubmitVersion" runat="server" Text="Actualizar Versión" 
+                                CssClass="btn btn-primary rounded-pill fw-bold" OnClick="BtnSubmitVersion_Click" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <%-- endregion --%>
+
 </asp:Content>
