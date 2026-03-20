@@ -42,6 +42,15 @@ namespace GestionDocumentos
         protected global::System.Web.UI.WebControls.DropDownList FilterOptions;
 
         /// <summary>
+        /// LblTxtSearchFile control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label LblTxtSearchFile;
+
+        /// <summary>
         /// TxtSearchFile control.
         /// </summary>
         /// <remarks>
@@ -49,6 +58,15 @@ namespace GestionDocumentos
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox TxtSearchFile;
+
+        /// <summary>
+        /// BtnSearchFile control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button BtnSearchFile;
 
         /// <summary>
         /// GvDocuments control.
@@ -60,13 +78,13 @@ namespace GestionDocumentos
         protected global::System.Web.UI.WebControls.GridView GvDocuments;
 
         /// <summary>
-        /// InputFile control.
+        /// FupFile control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputFile InputFile;
+        protected global::System.Web.UI.WebControls.FileUpload FupFile;
 
         /// <summary>
         /// LblFileData control.

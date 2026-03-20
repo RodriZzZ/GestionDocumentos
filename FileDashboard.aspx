@@ -50,10 +50,10 @@
                                     </asp:DropDownList>
                                 </div>
                                 <div class="col-md-6">
-                                    <label class="small text-muted mb-1">Buscar documento:</label>
-                                    <div class="input-group">
-                                        <asp:TextBox ID="TxtSearchFile" runat="server" CssClass="form-control" placeholder="Nombre del archivo..."></asp:TextBox>
-                                        <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
+                                    <asp:Label class="small text-muted mb-1" ID="LblTxtSearchFile" runat="server" Text="Buscar documento"/>
+                                    <div class="input-group shadow-sm">
+                                        <asp:TextBox ID="TxtSearchFile" runat="server" CssClass="form-control" placeholder="Nombre del archivo..."/>
+                                        <asp:Button ID="BtnSearchFile" OnClick="BtnSearchFile_OnClick" runat="server" CssClass="btn btn-primary" Text="Buscar"/>
                                     </div>
                                 </div>
                             </div>
@@ -99,8 +99,8 @@
       
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label class="form-label text-muted" for="InputFile">Selecciona el archivo:</label>
-                        <input type="file" id="InputFile" runat="server"/>
+                        <label class="form-label text-muted" for="FupFile">Selecciona el archivo:</label>
+                        <asp:FileUpload ID="FupFile" runat="server" CssClass="form-control" />
                     </div>
         
                     <asp:Label ID="LblFileData" runat="server" CssClass="d-block mt-2"></asp:Label>
