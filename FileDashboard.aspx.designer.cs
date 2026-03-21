@@ -11,133 +11,106 @@ namespace GestionDocumentos
 {
 
 
-    public partial class AdminUsuarioForm
+    public partial class FileDashboard
     {
 
         /// <summary>
-        /// LblTitle control.
+        /// DdlSort control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label LblTitle;
+        protected global::System.Web.UI.WebControls.DropDownList DdlSort;
 
         /// <summary>
-        /// LblUserFirstName control.
+        /// LblTxtSearchFile control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label LblUserFirstName;
+        protected global::System.Web.UI.WebControls.Label LblTxtSearchFile;
 
         /// <summary>
-        /// TxtUserFirstName control.
+        /// TxtSearchFile control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TxtUserFirstName;
+        protected global::System.Web.UI.WebControls.TextBox TxtSearchFile;
 
         /// <summary>
-        /// LblUserLastName control.
+        /// BtnSearchFile control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label LblUserLastName;
+        protected global::System.Web.UI.WebControls.Button BtnSearchFile;
 
         /// <summary>
-        /// TxtUserLastName control.
+        /// BtnResetFilter control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TxtUserLastName;
+        protected global::System.Web.UI.WebControls.Button BtnResetFilter;
 
         /// <summary>
-        /// LblUserEmail control.
+        /// GvDocuments control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label LblUserEmail;
+        protected global::System.Web.UI.WebControls.GridView GvDocuments;
 
         /// <summary>
-        /// TxtUserEmail control.
+        /// FupFile control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TxtUserEmail;
+        protected global::System.Web.UI.WebControls.FileUpload FupFile;
 
         /// <summary>
-        /// LblPassword control.
+        /// LblFileData control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label LblPassword;
+        protected global::System.Web.UI.WebControls.Label LblFileData;
 
         /// <summary>
-        /// TxtPassword control.
+        /// BtnUploadFile control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TxtPassword;
+        protected global::System.Web.UI.WebControls.Button BtnUploadFile;
 
         /// <summary>
-        /// ReqPassword control.
+        /// FupNewVersion control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator ReqPassword;
+        protected global::System.Web.UI.WebControls.FileUpload FupNewVersion;
 
         /// <summary>
-        /// LblRole control.
+        /// BtnSubmitVersion control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label LblRole;
-
-        /// <summary>
-        /// DdlRole control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList DdlRole;
-
-        /// <summary>
-        /// BtnUpsertUser control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button BtnUpsertUser;
-
-        /// <summary>
-        /// LblError control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label LblError;
+        protected global::System.Web.UI.WebControls.Button BtnSubmitVersion;
     }
 }
